@@ -1,13 +1,18 @@
-import { TrendingUp, Percent, Package } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, CalendarIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useState, useEffect, useCallback } from "react";
+import { format, isToday, isTomorrow, isPast, isFuture, differenceInDays } from "date-fns";
+import { it } from "date-fns/locale";
 
 const HomePage = () => {
   const { apps } = useApps();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   const activeApps = apps.filter((a) => a.active);
   const navigate = useNavigate();
+  const [reminders, setReminders] = useState<any[]>([]);
 
   const displayName = profile?.nome || "utente";
 
@@ -23,6 +28,34 @@ const HomePage = () => {
     "email-bozzer": "/email-bozzer",
   };
 
+  const loadReminders = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("email_drafts")
+      .select("*")
+      .eq("user_id", user.id)
+      .not("reminder_at", "is", null)
+      .order("reminder_at", { ascending: true });
+    if (data) setReminders(data);
+  }, [user]);
+
+  useEffect(() => { loadReminders(); }, [loadReminders]);
+
+  const getReminderLabel = (dateStr: string) => {
+    const date = new Date(dateStr);
+    if (isToday(date)) return { text: "Oggi", className: "bg-destructive/15 text-destructive" };
+    if (isTomorrow(date)) return { text: "Domani", className: "bg-accent-orange/15 text-accent-orange-text" };
+    if (isPast(date)) return { text: "Scaduto", className: "bg-destructive/15 text-destructive" };
+    const days = differenceInDays(date, new Date());
+    if (days <= 7) return { text: `Tra ${days}g`, className: "bg-accent-orange/15 text-accent-orange-text" };
+    return { text: format(date, "d MMM", { locale: it }), className: "bg-secondary text-muted-foreground" };
+  };
+
+  const upcomingReminders = reminders.filter(r => {
+    const date = new Date(r.reminder_at);
+    return isToday(date) || isFuture(date) || (isPast(date) && differenceInDays(new Date(), date) <= 7);
+  });
+
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
       <div>
@@ -35,6 +68,42 @@ const HomePage = () => {
         <KpiCard title="Tasse da accantonare" value="€ 486" subtitle="15% coefficiente ATECO 62.01" icon={<Percent className="w-5 h-5" />} variant="orange" />
         <KpiCard title="Pacchetti attivi" value={String(activeApps.length)} subtitle={`su ${apps.length} disponibili`} icon={<Package className="w-5 h-5" />} variant="green" />
       </div>
+
+      {/* ── Promemoria ── */}
+      {upcomingReminders.length > 0 && (
+        <section>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-accent-orange/10 text-accent-orange-text flex items-center justify-center">
+              <Bell className="w-4 h-4" />
+            </div>
+            <h2 className="text-lg font-semibold text-foreground">Promemoria</h2>
+            <span className="ml-auto text-xs text-muted-foreground">{upcomingReminders.length} attivi</span>
+          </div>
+          <div className="space-y-2">
+            {upcomingReminders.map((r) => {
+              const label = getReminderLabel(r.reminder_at);
+              return (
+                <div
+                  key={r.id}
+                  onClick={() => navigate("/email-bozzer")}
+                  className="flex items-center gap-3 p-3.5 rounded-xl bg-card border border-border/50 shadow-card hover:shadow-card-hover transition-all cursor-pointer group"
+                >
+                  <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
+                    <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">{r.subject || "Senza oggetto"}</p>
+                    <p className="text-xs text-muted-foreground truncate">{r.recipients || "Nessun destinatario"}</p>
+                  </div>
+                  <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full shrink-0 ${label.className}`}>
+                    {label.text}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {activeApps.length > 0 && (
         <section>
