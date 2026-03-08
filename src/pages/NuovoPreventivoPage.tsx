@@ -171,7 +171,7 @@ export default function NuovoPreventivoPage() {
     if (!validate()) return;
     const p = buildPreventivo();
     if (isEditing) updatePreventivo(p);
-    generatePDF(p);
+    generatePDF(p, pdfColors);
     toast.success("PDF generato e scaricato");
   };
 
