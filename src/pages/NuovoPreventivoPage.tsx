@@ -33,7 +33,14 @@ export default function NuovoPreventivoPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { getPreventivo, addPreventivo, updatePreventivo } = usePreventivi();
+  const { profile } = useAuth();
   const isEditing = !!id;
+
+  const pdfColors = profile ? {
+    colorStart: (profile as any).pdf_color_start || "#AAFF45",
+    colorEnd: (profile as any).pdf_color_end || "#FF6B1A",
+    mode: ((profile as any).pdf_color_mode || "gradient") as "gradient" | "colorful",
+  } : undefined;
   const [originalStato, setOriginalStato] = useState<"bozza" | "inviato" | "accettato" | "rifiutato">("bozza");
 
   const [showEmail, setShowEmail] = useState(false);
