@@ -334,8 +334,14 @@ function SuppliersTab() {
 function AppTagsTab() {
   const { user } = useAuth();
   const [tags, setTags] = useState<Tag[]>([]);
+  const [editingTag, setEditingTag] = useState<string | null>(null);
+  const [editLabel, setEditLabel] = useState("");
+  const [editColor, setEditColor] = useState("");
+  const [editCategory, setEditCategory] = useState<TagCategory>("clienti");
   const [newTag, setNewTag] = useState("");
   const [newCategory, setNewCategory] = useState<TagCategory>("clienti");
+  const [newColor, setNewColor] = useState(tagColors[0]);
+  const [addingInCategory, setAddingInCategory] = useState<TagCategory | null>(null);
 
   const load = useCallback(async () => {
     if (!user) return;
@@ -345,14 +351,26 @@ function AppTagsTab() {
 
   useEffect(() => { load(); }, [load]);
 
-  const addTag = async () => {
+  const addTag = async (category: TagCategory) => {
     if (!newTag.trim() || !user) return;
-    const colorIndex = tags.length % tagColors.length;
-    await supabase.from("tags").insert({
-      user_id: user.id, label: newTag.trim(), category: newCategory, color: tagColors[colorIndex],
+    const colorIndex = tags.filter(t => t.category === category).length % tagColors.length;
+    const { error } = await supabase.from("tags").insert({
+      user_id: user.id, label: newTag.trim(), category, color: newColor || tagColors[colorIndex],
     });
-    setNewTag("");
-    toast.success("Tag aggiunto");
+    if (error) { toast.error("Errore"); return; }
+    setNewTag(""); setAddingInCategory(null); setNewColor(tagColors[0]);
+    toast.success("Tag creato");
+    load();
+  };
+
+  const updateTag = async (id: string) => {
+    if (!editLabel.trim()) return;
+    const { error } = await supabase.from("tags").update({
+      label: editLabel.trim(), color: editColor, category: editCategory,
+    }).eq("id", id);
+    if (error) { toast.error("Errore"); return; }
+    setEditingTag(null);
+    toast.success("Tag aggiornato");
     load();
   };
 
@@ -362,47 +380,141 @@ function AppTagsTab() {
     load();
   };
 
+  const startEdit = (tag: Tag) => {
+    setEditingTag(tag.id);
+    setEditLabel(tag.label);
+    setEditColor(tag.color);
+    setEditCategory(tag.category);
+  };
+
   const categories: TagCategory[] = ["clienti", "fornitori", "progetti", "stato"];
 
   return (
     <div className="mt-6 space-y-6">
-      <Section title="Gestione Tag">
-        <p className="text-sm text-muted-foreground -mt-2 mb-4">
-          Crea e gestisci i tag da usare per organizzare clienti, fornitori, progetti e stati.
+      <div>
+        <h2 className="text-base font-semibold text-foreground mb-1">Sistema Tag</h2>
+        <p className="text-sm text-muted-foreground mb-6">
+          Organizza i tuoi tag per categoria. Clicca su un tag per modificarlo.
         </p>
-        <div className="flex flex-col sm:flex-row gap-3 mb-6">
-          <input type="text" value={newTag} onChange={e => setNewTag(e.target.value)}
-            onKeyDown={e => e.key === "Enter" && addTag()} placeholder="Nome del tag..."
-            className="flex-1 px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 transition" />
-          <select value={newCategory} onChange={e => setNewCategory(e.target.value as TagCategory)}
-            className="px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring/30 transition">
-            {categories.map(c => <option key={c} value={c}>{tagCategoryLabels[c]}</option>)}
-          </select>
-          <button onClick={addTag}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-accent text-sm font-medium text-foreground hover:opacity-90 transition-opacity">
-            <Plus className="w-4 h-4" /> Aggiungi
-          </button>
-        </div>
-        {categories.map(cat => {
-          const catTags = tags.filter(t => t.category === cat);
-          if (catTags.length === 0) return null;
-          return (
-            <div key={cat} className="mb-5">
-              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">{tagCategoryLabels[cat]}</h3>
+      </div>
+
+      {categories.map(cat => {
+        const catTags = tags.filter(t => t.category === cat);
+        return (
+          <div key={cat} className="rounded-xl border border-border bg-card overflow-hidden">
+            {/* Category header */}
+            <div className="flex items-center justify-between px-4 py-3 bg-secondary/30 border-b border-border">
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${
+                  cat === "clienti" ? "bg-blue-500" : cat === "fornitori" ? "bg-purple-500" : cat === "progetti" ? "bg-amber-500" : "bg-accent-green-text"
+                }`} />
+                <h3 className="text-sm font-semibold text-foreground">{tagCategoryLabels[cat]}</h3>
+                <span className="text-[11px] text-muted-foreground ml-1">({catTags.length})</span>
+              </div>
+              <button
+                onClick={() => { setAddingInCategory(addingInCategory === cat ? null : cat); setNewTag(""); setNewColor(tagColors[catTags.length % tagColors.length]); }}
+                className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" /> Aggiungi
+              </button>
+            </div>
+
+            {/* Tags list */}
+            <div className="p-3">
+              {catTags.length === 0 && addingInCategory !== cat && (
+                <p className="text-xs text-muted-foreground text-center py-4">Nessun tag in questa categoria</p>
+              )}
+
               <div className="flex flex-wrap gap-2">
                 {catTags.map(tag => (
-                  <span key={tag.id} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium ${tag.color}`}>
-                    {tag.label}
-                    <button onClick={() => removeTag(tag.id)} className="w-4 h-4 rounded-full flex items-center justify-center hover:bg-foreground/10 transition-colors">
-                      <X className="w-3 h-3" />
-                    </button>
-                  </span>
+                  editingTag === tag.id ? (
+                    /* ── Inline edit mode ── */
+                    <div key={tag.id} className="flex items-center gap-2 p-2 rounded-lg border border-ring/40 bg-secondary/50 w-full animate-fade-in">
+                      <input
+                        type="text"
+                        value={editLabel}
+                        onChange={e => setEditLabel(e.target.value)}
+                        onKeyDown={e => { if (e.key === "Enter") updateTag(tag.id); if (e.key === "Escape") setEditingTag(null); }}
+                        autoFocus
+                        className="flex-1 min-w-0 px-2 py-1 text-sm bg-card border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring/30"
+                      />
+                      <select
+                        value={editCategory}
+                        onChange={e => setEditCategory(e.target.value as TagCategory)}
+                        className="px-2 py-1 text-xs bg-card border border-border rounded-md text-foreground focus:outline-none"
+                      >
+                        {categories.map(c => <option key={c} value={c}>{tagCategoryLabels[c]}</option>)}
+                      </select>
+                      <div className="flex gap-1">
+                        {tagColors.map(c => (
+                          <button
+                            key={c}
+                            onClick={() => setEditColor(c)}
+                            className={`w-5 h-5 rounded-full border-2 transition-all ${c.split(" ")[0]} ${editColor === c ? "border-foreground scale-110" : "border-transparent opacity-60 hover:opacity-100"}`}
+                          />
+                        ))}
+                      </div>
+                      <button onClick={() => updateTag(tag.id)} className="w-7 h-7 rounded-md flex items-center justify-center text-accent-green-text hover:bg-accent-green/10 transition-colors">
+                        <Check className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => setEditingTag(null)} className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    /* ── Tag chip ── */
+                    <span
+                      key={tag.id}
+                      className={`group inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all hover:shadow-sm hover:scale-[1.02] ${tag.color}`}
+                      onClick={() => startEdit(tag)}
+                    >
+                      {tag.label}
+                      <button
+                        onClick={e => { e.stopPropagation(); removeTag(tag.id); }}
+                        className="w-4 h-4 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 hover:bg-foreground/10 transition-all"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </span>
+                  )
                 ))}
               </div>
+
+              {/* ── Inline add form ── */}
+              {addingInCategory === cat && (
+                <div className="flex items-center gap-2 mt-3 p-2 rounded-lg border border-dashed border-border bg-secondary/20 animate-fade-in">
+                  <input
+                    type="text"
+                    value={newTag}
+                    onChange={e => setNewTag(e.target.value)}
+                    onKeyDown={e => { if (e.key === "Enter") addTag(cat); if (e.key === "Escape") setAddingInCategory(null); }}
+                    placeholder="Nome del tag…"
+                    autoFocus
+                    className="flex-1 min-w-0 px-2 py-1 text-sm bg-card border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring/30"
+                  />
+                  <div className="flex gap-1">
+                    {tagColors.map(c => (
+                      <button
+                        key={c}
+                        onClick={() => setNewColor(c)}
+                        className={`w-5 h-5 rounded-full border-2 transition-all ${c.split(" ")[0]} ${newColor === c ? "border-foreground scale-110" : "border-transparent opacity-60 hover:opacity-100"}`}
+                      />
+                    ))}
+                  </div>
+                  <button onClick={() => addTag(cat)} disabled={!newTag.trim()}
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-accent-green-text hover:bg-accent-green/10 transition-colors disabled:opacity-30">
+                    <Check className="w-4 h-4" />
+                  </button>
+                  <button onClick={() => setAddingInCategory(null)}
+                    className="w-7 h-7 rounded-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
-          );
-        })}
-      </Section>
+          </div>
+        );
+      })}
     </div>
   );
 }
