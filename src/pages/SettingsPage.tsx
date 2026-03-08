@@ -84,6 +84,9 @@ function PersonalTab() {
     partita_iva: "", codice_fiscale: "", codice_ateco: "",
     coefficiente_redditivita: "", codice_sdi: "", indirizzo: "",
     notifica_scadenze_fiscali: true, notifica_push_pagamenti: true, report_settimanale: false,
+    pdf_color_mode: "gradient" as string,
+    pdf_color_start: "#AAFF45",
+    pdf_color_end: "#FF6B1A",
   });
   const [saving, setSaving] = useState(false);
 
