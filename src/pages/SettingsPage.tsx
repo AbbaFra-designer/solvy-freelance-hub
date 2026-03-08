@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Landmark, FileText, Plus, Pencil, Trash2, X, Copy, Check } from "lucide-react";
+import { Landmark, FileText, Plus, Pencil, Trash2, X, Copy, Check, Palette } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
