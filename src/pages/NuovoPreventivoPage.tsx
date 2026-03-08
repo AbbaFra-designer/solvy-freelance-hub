@@ -294,7 +294,7 @@ export default function NuovoPreventivoPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-muted-foreground">
-                  <th className="text-left py-2 px-2 font-medium">Descrizione</th>
+                  <th className="text-left py-3 px-3 font-medium">Descrizione</th>
                   <th className="text-center py-2 px-2 font-medium w-20">Qtà</th>
                   <th className="text-center py-2 px-2 font-medium w-28">Unità</th>
                   <th className="text-right py-2 px-2 font-medium w-28">Prezzo (€)</th>
