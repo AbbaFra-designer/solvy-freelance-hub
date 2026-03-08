@@ -85,11 +85,11 @@ export default function PreventiviPage() {
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in p-2 sm:p-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Preventivi</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Preventivi</h1>
           <p className="text-sm text-muted-foreground">Gestisci i tuoi preventivi e genera PDF professionali</p>
         </div>
         <Button
@@ -107,28 +107,28 @@ export default function PreventiviPage() {
           placeholder="Cerca per cliente, progetto o numero..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="pl-9"
+          className="pl-9 h-11"
         />
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-border bg-card shadow-card">
+      <div className="rounded-xl border border-border bg-card shadow-card overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead><SortHeader field="numero">#ID</SortHeader></TableHead>
-              <TableHead><SortHeader field="nomeProgetto">Nome Progetto</SortHeader></TableHead>
-              <TableHead><SortHeader field="nomeCliente">Cliente</SortHeader></TableHead>
-              <TableHead className="hidden md:table-cell"><SortHeader field="dataEmissione">Data Emissione</SortHeader></TableHead>
-              <TableHead className="text-right"><SortHeader field="importo">Importo</SortHeader></TableHead>
-              <TableHead><SortHeader field="stato">Stato</SortHeader></TableHead>
-              <TableHead className="text-right">Azioni</TableHead>
+            <TableRow className="bg-muted/30">
+              <TableHead className="py-4 px-5"><SortHeader field="numero">#ID</SortHeader></TableHead>
+              <TableHead className="py-4 px-5"><SortHeader field="nomeProgetto">Nome Progetto</SortHeader></TableHead>
+              <TableHead className="py-4 px-5"><SortHeader field="nomeCliente">Cliente</SortHeader></TableHead>
+              <TableHead className="hidden md:table-cell py-4 px-5"><SortHeader field="dataEmissione">Data Emissione</SortHeader></TableHead>
+              <TableHead className="text-right py-4 px-5"><SortHeader field="importo">Importo</SortHeader></TableHead>
+              <TableHead className="py-4 px-5"><SortHeader field="stato">Stato</SortHeader></TableHead>
+              <TableHead className="text-right py-4 px-5">Azioni</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {sorted.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-12 text-muted-foreground">
+                <TableCell colSpan={7} className="text-center py-16 text-muted-foreground">
                   Nessun preventivo trovato
                 </TableCell>
               </TableRow>
@@ -136,31 +136,31 @@ export default function PreventiviPage() {
               sorted.map((p) => {
                 const cfg = statusConfig[p.stato];
                 return (
-                  <TableRow key={p.id} className="group">
-                    <TableCell className="font-mono text-xs text-muted-foreground">{p.numero}</TableCell>
-                    <TableCell className="font-medium">{p.nomeProgetto}</TableCell>
-                    <TableCell>{p.nomeCliente}</TableCell>
-                    <TableCell className="hidden md:table-cell text-muted-foreground">
+                  <TableRow key={p.id} className="group hover:bg-muted/20 transition-colors">
+                    <TableCell className="font-mono text-xs text-muted-foreground py-4 px-5">{p.numero}</TableCell>
+                    <TableCell className="font-medium py-4 px-5">{p.nomeProgetto}</TableCell>
+                    <TableCell className="py-4 px-5">{p.nomeCliente}</TableCell>
+                    <TableCell className="hidden md:table-cell text-muted-foreground py-4 px-5">
                       {new Date(p.dataEmissione).toLocaleDateString("it-IT")}
                     </TableCell>
-                    <TableCell className="text-right font-semibold">
+                    <TableCell className="text-right font-semibold py-4 px-5">
                       €{getImporto(p).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-4 px-5">
                       <Badge className={cfg.className}>{cfg.label}</Badge>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Scarica PDF" onClick={() => handleDownload(p)}>
+                    <TableCell className="py-4 px-5">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button variant="ghost" size="icon" className="h-9 w-9" title="Scarica PDF" onClick={() => handleDownload(p)}>
                           <Download className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Invia via Email" onClick={() => setEmailPreventivo(p)}>
+                        <Button variant="ghost" size="icon" className="h-9 w-9" title="Invia via Email" onClick={() => setEmailPreventivo(p)}>
                           <Mail className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8" title="Modifica" onClick={() => navigate(`/preventivi/modifica/${p.id}`)}>
+                        <Button variant="ghost" size="icon" className="h-9 w-9" title="Modifica" onClick={() => navigate(`/preventivi/modifica/${p.id}`)}>
                           <Pencil className="w-4 h-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive hover:text-destructive" title="Elimina" onClick={() => setDeleteId(p.id)}>
+                        <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive hover:text-destructive" title="Elimina" onClick={() => setDeleteId(p.id)}>
                           <Trash2 className="w-4 h-4" />
                         </Button>
                       </div>
