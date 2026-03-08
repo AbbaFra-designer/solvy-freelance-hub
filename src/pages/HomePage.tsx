@@ -27,6 +27,7 @@ const HomePage = () => {
     "id-contact": "/id-contact",
     "email-bozzer": "/email-bozzer",
     "preventivi": "/preventivi",
+    "bandi": "/bandi",
   };
 
   const loadReminders = useCallback(async () => {

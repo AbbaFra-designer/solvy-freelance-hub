@@ -16,7 +16,7 @@ const initialApps: AppItem[] = [
   { id: "preventivi", name: "Preventivi", description: "Crea e gestisci i tuoi preventivi", icon: <FileText className="w-6 h-6" />, active: true, free: false },
   { id: "lead-clients", name: "Lead & Clients", description: "Gestisci lead e converti in clienti", icon: <UserCheck className="w-6 h-6" />, active: false, free: false },
   { id: "eventi-news", name: "Eventi e News", description: "Resta aggiornato su eventi e novità", icon: <Calendar className="w-6 h-6" />, active: false, free: false },
-  { id: "bandi", name: "Bandi", description: "Scopri bandi e opportunità di finanziamento", icon: <Landmark className="w-6 h-6" />, active: false, free: false },
+  { id: "bandi", name: "Bandi & Finanziamenti", description: "Bandi, premi e finanziamenti per designer e freelance", icon: <Landmark className="w-6 h-6" />, active: true, free: true },
   { id: "smm-planner", name: "SMM Planner", description: "Pianifica i tuoi contenuti social media", icon: <LayoutGrid className="w-6 h-6" />, active: false, free: false },
 ];
 
