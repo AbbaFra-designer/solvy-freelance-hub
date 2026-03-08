@@ -1,4 +1,5 @@
 import { TrendingUp, Percent, Package, Users, FileText, Mail } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const today = new Date().toLocaleDateString("it-IT", {
