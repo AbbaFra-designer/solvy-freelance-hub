@@ -44,9 +44,10 @@ const tagCategoryLabels: Record<TagCategory, string> = {
   clienti: "Clienti", fornitori: "Fornitori", progetti: "Progetti", stato: "Stato",
 };
 const tagColors = [
-  "bg-accent-green/15 text-accent-green-text", "bg-blue-100 text-blue-700",
-  "bg-amber-100 text-amber-700", "bg-purple-100 text-purple-700",
-  "bg-rose-100 text-rose-700", "bg-teal-100 text-teal-700",
+  "bg-emerald-500/20 text-emerald-700", "bg-blue-500/20 text-blue-700",
+  "bg-orange-500/20 text-orange-700", "bg-violet-500/20 text-violet-700",
+  "bg-rose-500/20 text-rose-700", "bg-cyan-500/20 text-cyan-700",
+  "bg-lime-500/20 text-lime-700", "bg-fuchsia-500/20 text-fuchsia-700",
 ];
 
 // ── Page ───────────────────────────────────────────────────────────────────────
