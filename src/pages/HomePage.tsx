@@ -1,11 +1,15 @@
 import { TrendingUp, Percent, Package } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
+import { useAuth } from "@/context/AuthContext";
 
 const HomePage = () => {
   const { apps } = useApps();
+  const { profile } = useAuth();
   const activeApps = apps.filter((a) => a.active);
   const navigate = useNavigate();
+
+  const displayName = profile?.nome || "utente";
 
   const today = new Date().toLocaleDateString("it-IT", {
     weekday: "long",
@@ -22,7 +26,7 @@ const HomePage = () => {
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Ciao, Marco 👋</h1>
+        <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Ciao, {displayName} 👋</h1>
         <p className="text-muted-foreground text-sm mt-1 capitalize">{today}</p>
       </div>
 
