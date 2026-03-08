@@ -68,6 +68,7 @@ export type Database = {
           created_at: string
           id: string
           recipients: string
+          reminder_at: string | null
           subject: string
           updated_at: string
           user_id: string
@@ -77,6 +78,7 @@ export type Database = {
           created_at?: string
           id?: string
           recipients?: string
+          reminder_at?: string | null
           subject?: string
           updated_at?: string
           user_id: string
@@ -86,6 +88,7 @@ export type Database = {
           created_at?: string
           id?: string
           recipients?: string
+          reminder_at?: string | null
           subject?: string
           updated_at?: string
           user_id?: string
