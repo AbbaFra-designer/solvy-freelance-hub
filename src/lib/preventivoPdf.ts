@@ -2,24 +2,29 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Preventivo } from "@/types/preventivo";
 
-const GREEN = [140, 230, 70] as const;  // accent green
-const ORANGE = [255, 120, 30] as const; // accent orange
+// ── Color palette ──
 const DARK = [33, 33, 33] as const;
-const GRAY = [120, 120, 120] as const;
-const LIGHT = [245, 245, 245] as const;
+const GRAY = [150, 150, 150] as const;
+const LIGHT_GRAY = [210, 210, 210] as const;
+const TABLE_HEAD_BG = [235, 235, 235] as const;
+const TABLE_ALT_BG = [248, 248, 248] as const;
 
-function gradientRect(doc: jsPDF, x: number, y: number, w: number, h: number) {
-  // Simple two-color gradient simulation
-  const steps = 20;
-  const sw = w / steps;
+// Soft gradient for bottom-right corner (peach/pink/lavender)
+function drawCornerGradient(doc: jsPDF, pw: number, ph: number) {
+  const size = 180;
+  const steps = 40;
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
-    const r = GREEN[0] + (ORANGE[0] - GREEN[0]) * t;
-    const g = GREEN[1] + (ORANGE[1] - GREEN[1]) * t;
-    const b = GREEN[2] + (ORANGE[2] - GREEN[2]) * t;
+    const r = 255;
+    const g = 230 - t * 60;
+    const b = 220 - t * 30 + t * 80;
+    const alpha = 0.08 + t * 0.06;
     doc.setFillColor(r, g, b);
-    doc.rect(x + i * sw, y, sw + 0.5, h, "F");
+    doc.setGState(doc.GState({ opacity: alpha }));
+    const radius = size - (size * i) / steps;
+    doc.circle(pw + 10, ph + 10, radius, "F");
   }
+  doc.setGState(doc.GState({ opacity: 1 }));
 }
 
 function addLogo(doc: jsPDF, dataUrl: string, x: number, y: number, maxW: number, maxH: number) {
@@ -31,173 +36,286 @@ function addLogo(doc: jsPDF, dataUrl: string, x: number, y: number, maxW: number
   }
 }
 
+// Black accent line
+function accentLine(doc: jsPDF, x: number, y: number, w: number) {
+  doc.setDrawColor(0, 0, 0);
+  doc.setLineWidth(1.5);
+  doc.line(x, y, x + w, y);
+}
+
 export function generatePDF(p: Preventivo) {
-  const doc = new jsPDF("p", "mm", "a4");
-  const pw = 210;
-  const margin = 20;
-  const cw = pw - margin * 2;
+  // Landscape A4
+  const doc = new jsPDF("l", "mm", "a4");
+  const pw = 297; // landscape width
+  const ph = 210; // landscape height
+  const ml = 25; // margin left
+  const mr = 25;
+  const cw = pw - ml - mr;
 
-  // ========== PAGE 1 — COVER ==========
-  gradientRect(doc, 0, 0, pw, 6);
+  // ═══════════════════════════════════════
+  // PAGE 1 — COVER
+  // ═══════════════════════════════════════
+  drawCornerGradient(doc, pw, ph);
 
-  // Freelancer logo
-  if (p.logoFreelancer) addLogo(doc, p.logoFreelancer, margin, 20, 30, 30);
+  // Client logo top-left
+  if (p.logoCliente) addLogo(doc, p.logoCliente, ml, 18, 35, 25);
 
-  // Title
+  // Freelancer logo top-right
+  if (p.logoFreelancer) addLogo(doc, p.logoFreelancer, pw - mr - 30, 18, 30, 25);
+
+  // "PREVENTIVO" label
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(13);
+  doc.setTextColor(...GRAY);
+  doc.setCharSpace(3);
+  doc.text("PREVENTIVO", ml, 90);
+  doc.setCharSpace(0);
+
+  // Project name — big bold
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(28);
+  doc.setFontSize(36);
   doc.setTextColor(...DARK);
-  doc.text(p.nomeProgetto, pw / 2, 80, { align: "center" });
+  const titleLines = doc.splitTextToSize(p.nomeProgetto, pw * 0.6);
+  doc.text(titleLines, ml, 108);
 
-  doc.setFontSize(16);
-  doc.setTextColor(...GRAY);
-  doc.text(p.sottotitolo, pw / 2, 92, { align: "center" });
+  // Bottom section — client info left, freelancer info right
+  const bottomY = ph - 30;
 
-  // Quote info
+  // Client info — bottom left
+  doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
-  doc.setTextColor(...GRAY);
-  doc.text(`N° ${p.numero}`, pw / 2, 108, { align: "center" });
-  doc.text(
-    `Data: ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`,
-    pw / 2, 115, { align: "center" }
-  );
-
-  // Client logo
-  if (p.logoCliente) addLogo(doc, p.logoCliente, pw / 2 - 20, 130, 40, 40);
-
-  // Client name
-  doc.setFontSize(14);
   doc.setTextColor(...DARK);
-  doc.text(`Per: ${p.nomeCliente}`, pw / 2, p.logoCliente ? 180 : 140, { align: "center" });
+  doc.text(p.nomeCliente, ml, bottomY);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text(`Preventivo N° ${p.numero}`, ml, bottomY + 6);
+  doc.text(`Data: ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`, ml, bottomY + 11);
+
+  // Freelancer info — bottom right
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...DARK);
+  doc.text(p.sottotitolo || "Freelancer", pw - mr, bottomY, { align: "right" });
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...GRAY);
+  doc.text(
+    `Validità: ${new Date(p.dataValidita).toLocaleDateString("it-IT")}`,
+    pw - mr, bottomY + 6, { align: "right" }
+  );
 
   // Collaborator logos
   if (p.logoCollaboratori.length > 0) {
-    const logoW = 20;
-    const gap = 8;
+    const logoW = 18;
+    const gap = 6;
     const totalW = p.logoCollaboratori.length * logoW + (p.logoCollaboratori.length - 1) * gap;
     let startX = (pw - totalW) / 2;
     p.logoCollaboratori.forEach((logo) => {
-      addLogo(doc, logo, startX, 250, logoW, logoW);
+      addLogo(doc, logo, startX, ph - 55, logoW, logoW);
       startX += logoW + gap;
     });
   }
 
-  // Footer line
-  gradientRect(doc, 0, 291, pw, 6);
-
-  // ========== PAGE 2 — BRIEF ==========
+  // ═══════════════════════════════════════
+  // PAGE 2 — ATTIVITÀ / PRICING
+  // ═══════════════════════════════════════
   doc.addPage();
-  gradientRect(doc, 0, 0, pw, 4);
+  drawCornerGradient(doc, pw, ph);
 
+  // Header
+  accentLine(doc, ml, 20, 50);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
+  doc.setFontSize(24);
   doc.setTextColor(...DARK);
-  doc.text("Brief del Progetto", margin, 25);
+  doc.text("Attività", ml, 32);
 
-  gradientRect(doc, margin, 30, 40, 2);
-
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.setTextColor(60, 60, 60);
-  const briefText = p.brief.replace(/<[^>]+>/g, "").trim() || "Nessuna descrizione fornita.";
-  const lines = doc.splitTextToSize(briefText, cw);
-  doc.text(lines, margin, 42);
-
-  // ========== PAGE 3 — PRICING ==========
-  doc.addPage();
-  gradientRect(doc, 0, 0, pw, 4);
-
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.setTextColor(...DARK);
-  doc.text("Dettaglio Economico", margin, 25);
-  gradientRect(doc, margin, 30, 40, 2);
-
+  // Table
   const unitaMap: Record<string, string> = { ore: "Ore", giorni: "Giorni", pezzi: "Pezzi", forfait: "Forfait" };
 
   autoTable(doc, {
-    startY: 38,
-    margin: { left: margin, right: margin },
-    head: [["Descrizione", "Qtà", "Unità", "Prezzo Unit.", "Totale"]],
+    startY: 44,
+    margin: { left: ml, right: mr },
+    head: [["", "ore", "costo"]],
     body: p.voci.map((v) => [
       v.descrizione,
-      String(v.quantita),
-      unitaMap[v.unita] || v.unita,
-      `€${v.prezzoUnitario.toFixed(2)}`,
-      `€${(v.quantita * v.prezzoUnitario).toFixed(2)}`,
+      v.unita === "forfait" ? "-" : String(v.quantita),
+      `€ ${v.prezzoUnitario.toFixed(2)}/${unitaMap[v.unita]?.toLowerCase() || v.unita}`,
     ]),
-    styles: { fontSize: 10, cellPadding: 4 },
-    headStyles: { fillColor: [...GREEN] as [number, number, number], textColor: [30, 30, 30], fontStyle: "bold" },
-    alternateRowStyles: { fillColor: [...LIGHT] as [number, number, number] },
+    styles: {
+      fontSize: 10,
+      cellPadding: { top: 5, bottom: 5, left: 8, right: 8 },
+      lineColor: [230, 230, 230],
+      lineWidth: 0.3,
+    },
+    headStyles: {
+      fillColor: [...TABLE_HEAD_BG] as [number, number, number],
+      textColor: [...DARK] as [number, number, number],
+      fontStyle: "bold",
+      fontSize: 9,
+    },
+    alternateRowStyles: {
+      fillColor: [...TABLE_ALT_BG] as [number, number, number],
+    },
+    columnStyles: {
+      0: { cellWidth: cw * 0.65 },
+      1: { cellWidth: cw * 0.15, halign: "center" },
+      2: { cellWidth: cw * 0.20, halign: "right" },
+    },
   });
 
-  const finalY = (doc as any).lastAutoTable?.finalY || 120;
+  const finalY = (doc as any).lastAutoTable?.finalY || 100;
+
+  // Total row
   const subtotal = p.voci.reduce((s, v) => s + v.quantita * v.prezzoUnitario, 0);
   const iva = subtotal * (p.ivaPercentuale / 100);
   const total = subtotal + iva;
 
-  let ty = finalY + 10;
+  const totalRowY = finalY + 2;
+  doc.setFillColor(...TABLE_HEAD_BG);
+  doc.rect(ml, totalRowY, cw, 10, "F");
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(...DARK);
+  doc.text(`€ ${total.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`, pw - mr - 8, totalRowY + 7, { align: "right" });
+
+  // IVA note
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(...GRAY);
+  if (p.ivaPercentuale > 0) {
+    doc.text(`Subtotale: €${subtotal.toFixed(2)} + IVA ${p.ivaPercentuale}%`, ml, totalRowY + 16);
+  } else {
+    doc.text("IVA esclusa.", pw - mr - 8, totalRowY + 16, { align: "right" });
+  }
+
+  // Two columns below: Tipologia & Condizioni di pagamento
+  const colY = totalRowY + 28;
+  const colW = cw / 2 - 10;
+
+  // Left column — Tempistiche / Tipologia
+  if (p.tempistiche) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(...DARK);
+    doc.text("Tipologia di collaborazione", ml, colY);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    const tempLines = doc.splitTextToSize(p.tempistiche, colW);
+    doc.text(tempLines, ml, colY + 7);
+  }
+
+  // Right column — Condizioni di pagamento
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(...DARK);
+  doc.text("Condizioni di pagamento", ml + colW + 20, colY);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(80, 80, 80);
+  const payText = `Pagamento tramite bonifico bancario entro 30gg dalla data di emissione della fattura.`;
+  const payLines = doc.splitTextToSize(payText, colW);
+  doc.text(payLines, ml + colW + 20, colY + 7);
+
+  // Closing signature — bottom right
   doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.setTextColor(...GRAY);
-  doc.text("Subtotale:", pw - margin - 60, ty);
-  doc.text(`€${subtotal.toFixed(2)}`, pw - margin, ty, { align: "right" });
-
-  ty += 7;
-  doc.text(`IVA ${p.ivaPercentuale}%:`, pw - margin - 60, ty);
-  doc.text(`€${iva.toFixed(2)}`, pw - margin, ty, { align: "right" });
-
-  ty += 10;
-  gradientRect(doc, pw - margin - 70, ty - 5, 70, 12);
+  doc.text("Cordiali saluti,", pw - mr, ph - 35, { align: "right" });
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(14);
+  doc.setFontSize(12);
   doc.setTextColor(...DARK);
-  doc.text("Totale:", pw - margin - 65, ty + 3);
-  doc.text(`€${total.toFixed(2)}`, pw - margin - 3, ty + 3, { align: "right" });
+  doc.text(p.sottotitolo || "Il Freelancer", pw - mr, ph - 28, { align: "right" });
 
-  // Timeline & validity
-  ty += 25;
-  doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(...GRAY);
-  if (p.tempistiche) {
-    doc.text(`Tempistiche: ${p.tempistiche}`, margin, ty);
-    ty += 7;
-  }
-  doc.text(
-    `Validità: fino al ${new Date(p.dataValidita).toLocaleDateString("it-IT")}`,
-    margin, ty
-  );
-
-  // ========== PAGE 4 — T&C ==========
+  // ═══════════════════════════════════════
+  // PAGE 3 — TERMINI E CONDIZIONI
+  // ═══════════════════════════════════════
   doc.addPage();
-  gradientRect(doc, 0, 0, pw, 4);
 
+  // Page number top-right
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(48);
+  doc.setTextColor(220, 220, 220);
+  doc.text("03", pw - mr, 30, { align: "right" });
+
+  // Header
+  accentLine(doc, ml, 20, 50);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   doc.setTextColor(...DARK);
-  doc.text("Termini e Condizioni", margin, 25);
-  gradientRect(doc, margin, 30, 40, 2);
+  doc.text("T&C", ml, 32);
 
+  // "TERMINI E CONDIZIONI" label on left
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(10);
-  doc.setTextColor(60, 60, 60);
-  const tcLines = doc.splitTextToSize(p.terminiCondizioni, cw);
-  doc.text(tcLines, margin, 42);
-
-  // Signature block
-  const sigY = 230;
-  doc.setDrawColor(200, 200, 200);
-  doc.line(margin, sigY, margin + 70, sigY);
-  doc.line(pw - margin - 70, sigY, pw - margin, sigY);
   doc.setFontSize(9);
   doc.setTextColor(...GRAY);
-  doc.text("Il Freelancer", margin, sigY + 5);
-  doc.text("Il Cliente", pw - margin - 70, sigY + 5);
+  doc.setCharSpace(1.5);
+  doc.text("TERMINI E", ml, 50);
+  doc.text("CONDIZIONI", ml, 55);
+  doc.setCharSpace(0);
 
-  // Footer
-  gradientRect(doc, 0, 291, pw, 6);
+  // Terms text — right area as numbered list
+  const tcX = ml + 55;
+  const tcW = cw - 55;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(60, 60, 60);
 
-  // Download
+  // Split T&C into numbered items
+  const rawTerms = p.terminiCondizioni.trim();
+  const termItems = rawTerms.split(/\n/).filter(line => line.trim().length > 0);
+
+  let tcY = 50;
+  termItems.forEach((item) => {
+    const cleanItem = item.trim();
+    const lines = doc.splitTextToSize(cleanItem, tcW);
+    if (tcY + lines.length * 4.5 > ph - 40) return; // don't overflow
+    doc.text(lines, tcX, tcY);
+    tcY += lines.length * 4.5 + 3;
+  });
+
+  // Closing message
+  tcY += 6;
+  if (tcY < ph - 55) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    doc.text("Grazie per la tua considerazione. Sarà un piacere lavorare insieme!", tcX, tcY);
+    doc.text("Resto a disposizione per eventuali domande o chiarimenti.", tcX, tcY + 5);
+  }
+
+  // Footer bar
+  const footerY = ph - 18;
+  doc.setDrawColor(...LIGHT_GRAY);
+  doc.setLineWidth(0.5);
+  doc.line(ml, footerY, pw - mr, footerY);
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(...DARK);
+  doc.text(p.sottotitolo || "Freelancer", ml, footerY + 6);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(...GRAY);
+
+  // Footer info spread across
+  const footerItems = [
+    `N° ${p.numero}`,
+    `Data: ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`,
+    `Cliente: ${p.nomeCliente}`,
+    `Preventivo ${p.nomeProgetto}`,
+  ];
+  const spacing = cw / (footerItems.length + 1);
+  footerItems.forEach((item, i) => {
+    doc.text(item, ml + spacing * (i + 1), footerY + 6, { align: "center" });
+  });
+
+  // ── Download ──
   doc.save(`${p.numero}_${p.nomeProgetto.replace(/\s+/g, "_")}.pdf`);
 }
