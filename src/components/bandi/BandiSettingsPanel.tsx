@@ -30,6 +30,7 @@ export function BandiSettingsPanel({ sources, onToggleSource, onAddSource, refre
       type: "page",
       category: "Personalizzata",
       enabled: true,
+      description: "Fonte personalizzata aggiunta dall'utente.",
     });
     setNewName("");
     setNewUrl("");
