@@ -173,7 +173,7 @@ export default function NuovoPreventivoPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-24">
+    <div className="space-y-8 animate-fade-in pb-28 px-1 sm:px-2">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
