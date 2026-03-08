@@ -167,6 +167,30 @@ const EmailBozzerPage = () => {
           </div>
 
           <div>
+            <label className="text-xs text-muted-foreground mb-1.5 block">Tag</label>
+            <div className="flex flex-wrap gap-2">
+              {tags.length === 0 && (
+                <p className="text-[11px] text-muted-foreground">Nessun tag disponibile. Creali in Impostazioni → Tag.</p>
+              )}
+              {tags.map((tag) => (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() => setEditing({ ...editing, tag_id: editing.tag_id === tag.id ? null : tag.id })}
+                  className={cn(
+                    "text-xs px-2.5 py-1 rounded-full border transition-all",
+                    editing.tag_id === tag.id
+                      ? `${tag.color} border-current font-medium`
+                      : "bg-secondary/50 text-muted-foreground border-border hover:bg-secondary"
+                  )}
+                >
+                  {tag.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs text-muted-foreground">Corpo email</label>
               <button onClick={() => copyText(editing.body || "", "edit-body")}
