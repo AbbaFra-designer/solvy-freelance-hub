@@ -1,5 +1,5 @@
-import { useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Save, Download, Send, Plus, Trash2, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,10 @@ import { format } from "date-fns";
 import { it } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Preventivo, PreventivoVoce, defaultTermini } from "@/types/preventivo";
+import { PreventivoVoce, defaultTermini } from "@/types/preventivo";
 import { EmailModal } from "@/components/preventivi/EmailModal";
 import { generatePDF } from "@/lib/preventivoPdf";
+import { usePreventivi } from "@/context/PreventiviContext";
 import { toast } from "sonner";
 
 const emptyVoce = (): PreventivoVoce => ({
@@ -29,6 +30,10 @@ const emptyVoce = (): PreventivoVoce => ({
 
 export default function NuovoPreventivoPage() {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const { getPreventivo, addPreventivo, updatePreventivo } = usePreventivi();
+  const isEditing = !!id;
+
   const [showEmail, setShowEmail] = useState(false);
 
   // Section 1 — Cover
@@ -55,6 +60,35 @@ export default function NuovoPreventivoPage() {
   // Section 4 — T&C
   const [termini, setTermini] = useState(defaultTermini);
 
+  // Load existing preventivo data for editing
+  useEffect(() => {
+    if (!id) return;
+    const existing = getPreventivo(id);
+    if (!existing) {
+      toast.error("Preventivo non trovato");
+      navigate("/preventivi");
+      return;
+    }
+    setNomeProgetto(existing.nomeProgetto);
+    setSottotitolo(existing.sottotitolo);
+    setNomeCliente(existing.nomeCliente);
+    setDataPreventivo(new Date(existing.dataEmissione));
+    setNumeroPreventivo(existing.numero);
+    setLogoFreelancer(existing.logoFreelancer || "");
+    setLogoCliente(existing.logoCliente || "");
+    setLogoCollaboratori(existing.logoCollaboratori || []);
+    setBrief(existing.brief.replace(/<[^>]+>/g, ""));
+    setVoci(existing.voci.length > 0 ? existing.voci : [emptyVoce()]);
+    setIvaEnabled(existing.ivaPercentuale > 0);
+    setTempistiche(existing.tempistiche);
+    setTermini(existing.terminiCondizioni);
+    // Calculate validity days from dates
+    const emDate = new Date(existing.dataEmissione);
+    const valDate = new Date(existing.dataValidita);
+    const diffDays = Math.round((valDate.getTime() - emDate.getTime()) / 86400000);
+    setValiditaGiorni(String(diffDays > 0 ? diffDays : 30));
+  }, [id]);
+
   const subtotal = voci.reduce((s, v) => s + v.quantita * v.prezzoUnitario, 0);
   const ivaAmount = ivaEnabled ? subtotal * 0.22 : 0;
   const total = subtotal + ivaAmount;
@@ -75,12 +109,12 @@ export default function NuovoPreventivoPage() {
     reader.readAsDataURL(file);
   };
 
-  const updateVoce = (id: string, field: keyof PreventivoVoce, value: string | number) => {
-    setVoci((prev) => prev.map((v) => (v.id === id ? { ...v, [field]: value } : v)));
+  const updateVoce = (voceId: string, field: keyof PreventivoVoce, value: string | number) => {
+    setVoci((prev) => prev.map((v) => (v.id === voceId ? { ...v, [field]: value } : v)));
   };
 
-  const buildPreventivo = (): Preventivo => ({
-    id: crypto.randomUUID(),
+  const buildPreventivo = () => ({
+    id: id || crypto.randomUUID(),
     numero: numeroPreventivo,
     nomeProgetto,
     sottotitolo,
@@ -90,7 +124,7 @@ export default function NuovoPreventivoPage() {
       new Date(dataPreventivo.getTime() + parseInt(validitaGiorni) * 86400000),
       "yyyy-MM-dd"
     ),
-    stato: "bozza",
+    stato: "bozza" as const,
     brief: `<p>${brief}</p>`,
     voci,
     ivaPercentuale: ivaEnabled ? 22 : 0,
@@ -111,13 +145,23 @@ export default function NuovoPreventivoPage() {
   };
 
   const handleSaveDraft = () => {
-    toast.success("Bozza salvata con successo!");
+    if (!validate()) return;
+    const p = buildPreventivo();
+    if (isEditing) {
+      updatePreventivo(p);
+      toast.success("Preventivo aggiornato!");
+    } else {
+      addPreventivo(p);
+      toast.success("Bozza salvata con successo!");
+    }
     navigate("/preventivi");
   };
 
   const handleDownloadPDF = () => {
     if (!validate()) return;
-    generatePDF(buildPreventivo());
+    const p = buildPreventivo();
+    if (isEditing) updatePreventivo(p);
+    generatePDF(p);
     toast.success("PDF generato e scaricato");
   };
 
@@ -135,7 +179,9 @@ export default function NuovoPreventivoPage() {
             <ArrowLeft className="w-5 h-5" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Nuovo Preventivo</h1>
+            <h1 className="text-2xl font-bold text-foreground">
+              {isEditing ? "Modifica Preventivo" : "Nuovo Preventivo"}
+            </h1>
             <p className="text-sm text-muted-foreground">Compila le sezioni per generare il PDF</p>
           </div>
         </div>
@@ -350,7 +396,7 @@ export default function NuovoPreventivoPage() {
       <div className="fixed bottom-0 left-0 right-0 md:left-16 lg:left-56 bg-card/95 backdrop-blur border-t border-border p-4 z-40 safe-area-bottom">
         <div className="flex flex-wrap items-center justify-end gap-3 max-w-5xl mx-auto">
           <Button variant="secondary" onClick={handleSaveDraft}>
-            <Save className="w-4 h-4 mr-2" /> Salva Bozza
+            <Save className="w-4 h-4 mr-2" /> {isEditing ? "Salva Modifiche" : "Salva Bozza"}
           </Button>
           <Button variant="outline" onClick={handleDownloadPDF}>
             <Download className="w-4 h-4 mr-2" /> Scarica PDF
