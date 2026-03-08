@@ -11,9 +11,10 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { mockPreventivi, Preventivo, PreventivoStatus } from "@/types/preventivo";
+import { Preventivo, PreventivoStatus } from "@/types/preventivo";
 import { EmailModal } from "@/components/preventivi/EmailModal";
 import { generatePDF } from "@/lib/preventivoPdf";
+import { usePreventivi } from "@/context/PreventiviContext";
 import { toast } from "sonner";
 
 const statusConfig: Record<PreventivoStatus, { label: string; className: string }> = {
@@ -27,7 +28,7 @@ type SortField = "numero" | "nomeProgetto" | "nomeCliente" | "dataEmissione" | "
 
 export default function PreventiviPage() {
   const navigate = useNavigate();
-  const [preventivi, setPreventivi] = useState<Preventivo[]>(mockPreventivi);
+  const { preventivi, deletePreventivo } = usePreventivi();
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("dataEmissione");
   const [sortAsc, setSortAsc] = useState(false);
@@ -66,7 +67,7 @@ export default function PreventiviPage() {
 
   const handleDelete = () => {
     if (!deleteId) return;
-    setPreventivi((prev) => prev.filter((p) => p.id !== deleteId));
+    deletePreventivo(deleteId);
     setDeleteId(null);
     toast.success("Preventivo eliminato");
   };
