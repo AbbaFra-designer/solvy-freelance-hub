@@ -50,7 +50,7 @@ const HomePage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <QuickCard
             title="ID Contact"
-            description="Rubrica clienti e contatti professionali"
+            description="I tuoi dati aziendali sempre a portata di mano"
             icon={<Users className="w-6 h-6" />}
             href="/id-contact"
           />
@@ -85,8 +85,8 @@ function KpiCard({
 }) {
   const accentClasses = {
     default: "bg-secondary text-foreground",
-    orange: "bg-accent-orange/10 text-accent-orange",
-    green: "bg-accent-green/10 text-accent-green",
+    orange: "bg-accent-orange/10 text-accent-orange-text",
+    green: "bg-accent-green/10 text-accent-green-text",
   };
 
   return (
@@ -120,7 +120,7 @@ function QuickCard({
       onClick={() => href && navigate(href)}
       className="p-5 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group"
     >
-      <div className="w-11 h-11 rounded-lg bg-accent-green/10 text-accent-green flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+      <div className="w-11 h-11 rounded-lg bg-accent-green/10 text-accent-green-text flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
         {icon}
       </div>
       <h3 className="font-semibold text-foreground text-sm">{title}</h3>

@@ -1,5 +1,6 @@
-import { Copy, Check } from "lucide-react";
+import { ArrowLeft, Copy, Check } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const businessInfo = [
@@ -11,6 +12,7 @@ const businessInfo = [
 ];
 
 const IdContactPage = () => {
+  const navigate = useNavigate();
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   const copyToClipboard = (value: string, index: number) => {
@@ -28,6 +30,15 @@ const IdContactPage = () => {
 
   return (
     <div className="p-4 md:p-8 max-w-xl mx-auto space-y-6">
+      {/* Back button */}
+      <button
+        onClick={() => navigate("/")}
+        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors -mb-2"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Torna alla Home
+      </button>
+
       <div>
         <h1 className="text-2xl md:text-3xl font-semibold text-foreground">ID Contact</h1>
         <p className="text-muted-foreground text-sm mt-1">
@@ -55,11 +66,11 @@ const IdContactPage = () => {
               <p className="text-sm font-medium text-foreground break-all">{item.value}</p>
               <button
                 onClick={() => copyToClipboard(item.value, i)}
-                className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100"
                 title={`Copia ${item.label}`}
               >
                 {copiedIndex === i ? (
-                  <Check className="w-4 h-4 text-accent-green" />
+                  <Check className="w-4 h-4 text-accent-green-text" />
                 ) : (
                   <Copy className="w-4 h-4" />
                 )}

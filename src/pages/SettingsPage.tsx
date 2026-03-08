@@ -104,7 +104,7 @@ function IntegrationRow({
       <button
         className={`text-xs font-medium px-4 py-2 rounded-lg transition-colors ${
           connected
-            ? "bg-accent-green/10 text-accent-green"
+            ? "bg-accent-green/10 text-accent-green-text"
             : "bg-secondary text-muted-foreground hover:bg-muted"
         }`}
       >
@@ -161,7 +161,7 @@ function ToggleRow({
         defaultChecked={defaultChecked}
         className="sr-only peer"
       />
-      <div className="relative w-11 h-6 bg-muted peer-checked:bg-accent-green rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-card after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5" />
+      <div className="relative w-11 h-6 bg-muted peer-checked:bg-accent-green-text rounded-full transition-colors after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-card after:rounded-full after:h-5 after:w-5 after:shadow after:transition-transform peer-checked:after:translate-x-5" />
     </label>
   );
 }
