@@ -197,7 +197,7 @@ export default function NuovoPreventivoPage() {
             Copertina PDF
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
+        <CardContent className="grid gap-5 sm:grid-cols-2 pt-2">
           <div className="space-y-2">
             <Label>Nome Progetto *</Label>
             <Input value={nomeProgetto} onChange={(e) => setNomeProgetto(e.target.value)} placeholder="Es. Restyling Sito Web" />
