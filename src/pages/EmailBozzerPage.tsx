@@ -1,10 +1,15 @@
-import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Tables } from "@/integrations/supabase/types";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 type EmailDraft = Tables<"email_drafts">;
 
