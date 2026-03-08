@@ -43,9 +43,9 @@ function glow(doc: jsPDF, pw: number, ph: number) {
   for (let i = 0; i < 20; i++) {
     const t = i / 20;
     doc.setFillColor(
-      GREEN[0] + (ORANGE[0] - GREEN[0]) * t,
-      GREEN[1] + (ORANGE[1] - GREEN[1]) * t,
-      GREEN[2] + (ORANGE[2] - GREEN[2]) * t,
+      COLOR_START[0] + (COLOR_END[0] - COLOR_START[0]) * t,
+      COLOR_START[1] + (COLOR_END[1] - COLOR_START[1]) * t,
+      COLOR_START[2] + (COLOR_END[2] - COLOR_START[2]) * t,
     );
     doc.setGState(doc.GState({ opacity: 0.035 + t * 0.025 }));
     doc.circle(pw + 15, ph + 15, 130 - i * 6, "F");
