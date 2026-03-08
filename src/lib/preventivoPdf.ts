@@ -64,7 +64,10 @@ function card(doc: jsPDF, x: number, y: number, w: number, h: number, r = 4) {
   doc.roundedRect(x, y, w, h, r, r, "F");
 }
 
-export function generatePDF(p: Preventivo) {
+export function generatePDF(p: Preventivo, colors?: PdfColors) {
+  // Set custom colors
+  COLOR_START = colors?.colorStart ? hexToRgb(colors.colorStart) : DEFAULT_GREEN;
+  COLOR_END = colors?.colorEnd ? hexToRgb(colors.colorEnd) : DEFAULT_ORANGE;
   const doc = new jsPDF("l", "mm", "a4");
   const pw = 297;
   const ph = 210;
