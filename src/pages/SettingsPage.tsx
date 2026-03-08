@@ -63,7 +63,7 @@ const SettingsPage = () => {
         <TabsList className="w-full grid grid-cols-4 h-11">
           <TabsTrigger value="personali" className="text-xs sm:text-sm">Personali</TabsTrigger>
           <TabsTrigger value="clienti" className="text-xs sm:text-sm">Clienti</TabsTrigger>
-          <TabsTrigger value="fornitori" className="text-xs sm:text-sm">Fornitori</TabsTrigger>
+          <TabsTrigger value="fornitori" className="text-xs sm:text-sm">Collaboratori</TabsTrigger>
           <TabsTrigger value="app" className="text-xs sm:text-sm">App</TabsTrigger>
         </TabsList>
         <TabsContent value="personali"><PersonalTab /></TabsContent>
