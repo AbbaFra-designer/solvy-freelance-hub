@@ -14,6 +14,8 @@ import IdContactPage from "@/pages/IdContactPage";
 import AboutPage from "@/pages/AboutPage";
 import EmailBozzerPage from "@/pages/EmailBozzerPage";
 import AdminPage from "@/pages/AdminPage";
+import PreventiviPage from "@/pages/PreventiviPage";
+import NuovoPreventivoPage from "@/pages/NuovoPreventivoPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
