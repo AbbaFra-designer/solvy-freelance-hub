@@ -117,6 +117,42 @@ const EmailBozzerPage = () => {
           </div>
 
           <div>
+            <label className="text-xs text-muted-foreground mb-1.5 block">Promemoria</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    "w-full flex items-center gap-2 text-sm bg-secondary/50 border border-border rounded-lg px-3 py-2 text-left transition-colors hover:bg-secondary/70",
+                    editing.reminder_at ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="w-4 h-4 shrink-0" />
+                  {editing.reminder_at
+                    ? format(new Date(editing.reminder_at), "d MMMM yyyy", { locale: it })
+                    : "Imposta un promemoria…"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={editing.reminder_at ? new Date(editing.reminder_at) : undefined}
+                  onSelect={(date) => setEditing({ ...editing, reminder_at: date ? date.toISOString() : null })}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                  locale={it}
+                />
+              </PopoverContent>
+            </Popover>
+            {editing.reminder_at && (
+              <button onClick={() => setEditing({ ...editing, reminder_at: null })}
+                className="text-[11px] text-muted-foreground hover:text-destructive mt-1 transition-colors">
+                Rimuovi promemoria
+              </button>
+            )}
+          </div>
+
+          <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs text-muted-foreground">Corpo email</label>
               <button onClick={() => copyText(editing.body || "", "edit-body")}
