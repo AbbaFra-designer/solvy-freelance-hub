@@ -163,7 +163,120 @@ function PersonalTab() {
         </div>
       </Section>
 
-      <button
+      <Section title="PDF Preventivi">
+        <div className="rounded-xl border border-border bg-card p-5 space-y-5">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center">
+              <Palette className="w-4 h-4 text-muted-foreground" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">Colori sfumatura PDF</p>
+              <p className="text-xs text-muted-foreground">Personalizza i colori del gradiente nei tuoi preventivi</p>
+            </div>
+          </div>
+
+          {/* Mode toggle */}
+          <div className="space-y-2">
+            <label className="block text-xs text-muted-foreground">Modalità</label>
+            <div className="flex gap-2">
+              {(["gradient", "colorful"] as const).map(mode => (
+                <button
+                  key={mode}
+                  onClick={() => update("pdf_color_mode", mode)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    form.pdf_color_mode === mode
+                      ? "bg-foreground text-background"
+                      : "bg-secondary text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {mode === "gradient" ? "Sfumatura" : "Colorful"}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Color pickers */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="block text-xs text-muted-foreground">Colore iniziale</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={form.pdf_color_start}
+                  onChange={e => update("pdf_color_start", e.target.value)}
+                  className="w-10 h-10 rounded-lg border border-border cursor-pointer bg-transparent p-0.5"
+                />
+                <input
+                  type="text"
+                  value={form.pdf_color_start}
+                  onChange={e => update("pdf_color_start", e.target.value)}
+                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground font-mono uppercase focus:outline-none focus:ring-2 focus:ring-ring/30 transition"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="block text-xs text-muted-foreground">Colore finale</label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="color"
+                  value={form.pdf_color_end}
+                  onChange={e => update("pdf_color_end", e.target.value)}
+                  className="w-10 h-10 rounded-lg border border-border cursor-pointer bg-transparent p-0.5"
+                />
+                <input
+                  type="text"
+                  value={form.pdf_color_end}
+                  onChange={e => update("pdf_color_end", e.target.value)}
+                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-card text-sm text-foreground font-mono uppercase focus:outline-none focus:ring-2 focus:ring-ring/30 transition"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Preview gradient bar */}
+          <div className="space-y-2">
+            <label className="block text-xs text-muted-foreground">Anteprima</label>
+            <div
+              className="h-8 rounded-lg w-full"
+              style={{
+                background: `linear-gradient(90deg, ${form.pdf_color_start}, ${form.pdf_color_end})`,
+              }}
+            />
+          </div>
+
+          {/* Preset palettes */}
+          <div className="space-y-2">
+            <label className="block text-xs text-muted-foreground">Preset</label>
+            <div className="flex gap-2 flex-wrap">
+              {[
+                { start: "#AAFF45", end: "#FF6B1A", name: "Solvy" },
+                { start: "#667EEA", end: "#764BA2", name: "Viola" },
+                { start: "#F093FB", end: "#F5576C", name: "Rosa" },
+                { start: "#4FACFE", end: "#00F2FE", name: "Oceano" },
+                { start: "#43E97B", end: "#38F9D7", name: "Menta" },
+                { start: "#FA709A", end: "#FEE140", name: "Tramonto" },
+                { start: "#212121", end: "#434343", name: "Dark" },
+              ].map(preset => (
+                <button
+                  key={preset.name}
+                  onClick={() => {
+                    update("pdf_color_start", preset.start);
+                    update("pdf_color_end", preset.end);
+                  }}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-secondary/50 hover:bg-secondary text-xs font-medium text-foreground transition-colors"
+                >
+                  <div
+                    className="w-4 h-4 rounded-full"
+                    style={{ background: `linear-gradient(135deg, ${preset.start}, ${preset.end})` }}
+                  />
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+
         onClick={save}
         disabled={saving}
         className="gradient-accent px-8 py-3 rounded-lg font-medium text-sm text-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
