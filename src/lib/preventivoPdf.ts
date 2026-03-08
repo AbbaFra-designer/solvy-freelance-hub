@@ -144,7 +144,6 @@ export function generatePDF(p: Preventivo, colors?: PdfColors) {
   // ═══════════════════════════════════════════
   doc.addPage();
   gradient(doc, 0, 0, pw, 4);
-  glow(doc, pw, ph);
 
   // Ghost page number
   doc.setFont("helvetica", "bold");
