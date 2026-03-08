@@ -32,6 +32,14 @@ const EmailBozzerPage = () => {
 
   useEffect(() => { load(); }, [load]);
 
+  const loadTags = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase.from("tags").select("*").eq("user_id", user.id).order("label");
+    if (data) setTags(data);
+  }, [user]);
+
+  useEffect(() => { loadTags(); }, [loadTags]);
+
   const copyText = (text: string, fieldId: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(fieldId);
