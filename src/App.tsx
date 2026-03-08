@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AppsProvider } from "@/context/AppsContext";
 import AppLayout from "@/components/AppLayout";
 import HomePage from "@/pages/HomePage";
 import AppsPage from "@/pages/AppsPage";
@@ -17,6 +18,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <AppsProvider>
       <Toaster />
       <Sonner />
       <BrowserRouter>
@@ -32,6 +34,7 @@ const App = () => (
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
+      </AppsProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
