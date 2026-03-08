@@ -70,6 +70,7 @@ export type Database = {
           recipients: string
           reminder_at: string | null
           subject: string
+          tag_id: string | null
           updated_at: string
           user_id: string
         }
@@ -80,6 +81,7 @@ export type Database = {
           recipients?: string
           reminder_at?: string | null
           subject?: string
+          tag_id?: string | null
           updated_at?: string
           user_id: string
         }
@@ -90,10 +92,19 @@ export type Database = {
           recipients?: string
           reminder_at?: string | null
           subject?: string
+          tag_id?: string | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "email_drafts_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {

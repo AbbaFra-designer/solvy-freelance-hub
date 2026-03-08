@@ -1,4 +1,4 @@
-import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon, Tag } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,11 +12,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 type EmailDraft = Tables<"email_drafts">;
+type TagRow = Tables<"tags">;
 
 const EmailBozzerPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [drafts, setDrafts] = useState<EmailDraft[]>([]);
+  const [tags, setTags] = useState<TagRow[]>([]);
   const [editing, setEditing] = useState<Partial<EmailDraft> | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
@@ -30,6 +32,14 @@ const EmailBozzerPage = () => {
 
   useEffect(() => { load(); }, [load]);
 
+  const loadTags = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase.from("tags").select("*").eq("user_id", user.id).order("label");
+    if (data) setTags(data);
+  }, [user]);
+
+  useEffect(() => { loadTags(); }, [loadTags]);
+
   const copyText = (text: string, fieldId: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(fieldId);
@@ -38,7 +48,7 @@ const EmailBozzerPage = () => {
   };
 
   const openNew = () => {
-    setEditing({ recipients: "", subject: "", body: "", reminder_at: null });
+    setEditing({ recipients: "", subject: "", body: "", reminder_at: null, tag_id: null });
     setIsNew(true);
   };
 
@@ -61,6 +71,7 @@ const EmailBozzerPage = () => {
         subject: editing.subject || "",
         body: editing.body || "",
         reminder_at: editing.reminder_at || null,
+        tag_id: editing.tag_id || null,
       });
       if (error) { toast.error("Errore"); setSaving(false); return; }
     } else {
@@ -69,6 +80,7 @@ const EmailBozzerPage = () => {
         subject: editing.subject,
         body: editing.body,
         reminder_at: editing.reminder_at || null,
+        tag_id: editing.tag_id || null,
       }).eq("id", editing.id!);
       if (error) { toast.error("Errore"); setSaving(false); return; }
     }
@@ -155,6 +167,30 @@ const EmailBozzerPage = () => {
           </div>
 
           <div>
+            <label className="text-xs text-muted-foreground mb-1.5 block">Tag</label>
+            <div className="flex flex-wrap gap-2">
+              {tags.length === 0 && (
+                <p className="text-[11px] text-muted-foreground">Nessun tag disponibile. Creali in Impostazioni → Tag.</p>
+              )}
+              {tags.map((tag) => (
+                <button
+                  key={tag.id}
+                  type="button"
+                  onClick={() => setEditing({ ...editing, tag_id: editing.tag_id === tag.id ? null : tag.id })}
+                  className={cn(
+                    "text-xs px-2.5 py-1 rounded-full border transition-all",
+                    editing.tag_id === tag.id
+                      ? `${tag.color} border-current font-medium`
+                      : "bg-secondary/50 text-muted-foreground border-border hover:bg-secondary"
+                  )}
+                >
+                  {tag.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs text-muted-foreground">Corpo email</label>
               <button onClick={() => copyText(editing.body || "", "edit-body")}
@@ -214,6 +250,15 @@ const EmailBozzerPage = () => {
                     {format(new Date(draft.reminder_at), "d MMM yyyy", { locale: it })}
                   </span>
                 )}
+                {draft.tag_id && (() => {
+                  const tag = tags.find(t => t.id === draft.tag_id);
+                  return tag ? (
+                    <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full mt-2 ml-1 ${tag.color}`}>
+                      <Tag className="w-3 h-3" />
+                      {tag.label}
+                    </span>
+                  ) : null;
+                })()}
               </div>
               <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button onClick={() => copyText(draft.body, `body-${draft.id}`)}
