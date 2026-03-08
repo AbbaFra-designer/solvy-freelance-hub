@@ -17,6 +17,7 @@ import EmailBozzerPage from "@/pages/EmailBozzerPage";
 import AdminPage from "@/pages/AdminPage";
 import PreventiviPage from "@/pages/PreventiviPage";
 import NuovoPreventivoPage from "@/pages/NuovoPreventivoPage";
+import BandiPage from "@/pages/BandiPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
