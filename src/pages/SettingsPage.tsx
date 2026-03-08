@@ -41,7 +41,7 @@ const supplierStatusColors: Record<SupplierStatus, string> = {
   evitare: "bg-destructive/15 text-destructive",
 };
 const tagCategoryLabels: Record<TagCategory, string> = {
-  clienti: "Clienti", fornitori: "Fornitori", progetti: "Progetti", stato: "Stato",
+  clienti: "Clienti", fornitori: "Collaboratori", progetti: "Progetti", stato: "Stato",
 };
 const tagColors = [
   "bg-emerald-500/20 text-emerald-700", "bg-blue-500/20 text-blue-700",
