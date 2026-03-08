@@ -16,7 +16,11 @@ export function AppSidebar() {
   return (
     <aside className="hidden md:flex flex-col w-16 lg:w-56 min-h-screen border-r border-border bg-sidebar shrink-0 transition-all duration-200">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 h-16 border-b border-border">
+      <div
+        className="flex items-center gap-2 px-4 h-16 border-b border-border cursor-pointer hover:bg-secondary/50 transition-colors"
+        onClick={() => navigate("/about")}
+        title="Cos'è Solvy?"
+      >
         <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
           <span className="text-sm font-bold text-foreground">S</span>
         </div>
