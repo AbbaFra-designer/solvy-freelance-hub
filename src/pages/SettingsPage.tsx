@@ -277,6 +277,7 @@ function PersonalTab() {
         </div>
       </Section>
 
+      <button
         onClick={save}
         disabled={saving}
         className="gradient-accent px-8 py-3 rounded-lg font-medium text-sm text-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
