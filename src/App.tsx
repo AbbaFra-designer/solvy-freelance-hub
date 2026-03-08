@@ -11,6 +11,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import ProfilePage from "@/pages/ProfilePage";
 import IdContactPage from "@/pages/IdContactPage";
 import AboutPage from "@/pages/AboutPage";
+import EmailBozzerPage from "@/pages/EmailBozzerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/id-contact" element={<IdContactPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/email-bozzer" element={<EmailBozzerPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
