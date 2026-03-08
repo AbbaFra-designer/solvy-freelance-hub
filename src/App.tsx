@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/id-contact" element={<IdContactPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/email-bozzer" element={<EmailBozzerPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
