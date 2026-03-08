@@ -51,6 +51,7 @@ function ProtectedRoutes() {
             <Route path="/preventivi" element={<PreventiviPage />} />
             <Route path="/preventivi/nuovo" element={<NuovoPreventivoPage />} />
             <Route path="/preventivi/modifica/:id" element={<NuovoPreventivoPage />} />
+            <Route path="/bandi" element={<BandiPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
