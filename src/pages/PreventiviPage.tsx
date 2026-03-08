@@ -81,7 +81,7 @@ export default function PreventiviPage() {
   };
 
   const handleDownload = (p: Preventivo) => {
-    generatePDF(p);
+    generatePDF(p, pdfColors);
     toast.success("PDF scaricato");
   };
 

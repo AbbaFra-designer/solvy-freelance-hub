@@ -18,6 +18,7 @@ import { PreventivoVoce, defaultTermini } from "@/types/preventivo";
 import { EmailModal } from "@/components/preventivi/EmailModal";
 import { generatePDF } from "@/lib/preventivoPdf";
 import { usePreventivi } from "@/context/PreventiviContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 const emptyVoce = (): PreventivoVoce => ({
