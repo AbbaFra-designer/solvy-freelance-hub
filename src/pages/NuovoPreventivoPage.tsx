@@ -308,7 +308,7 @@ export default function NuovoPreventivoPage() {
                     <td className="py-3 px-3">
                       <Input value={v.descrizione} onChange={(e) => updateVoce(v.id, "descrizione", e.target.value)} placeholder="Attività..." className="h-9" />
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Input type="number" min={1} value={v.quantita} onChange={(e) => updateVoce(v.id, "quantita", parseFloat(e.target.value) || 0)} className="h-9 text-center" />
                     </td>
                     <td className="py-2 px-2">
