@@ -100,7 +100,7 @@ const AppsPage = () => {
             <div
               className={`w-11 h-11 rounded-lg flex items-center justify-center mb-4 ${
                 app.active
-                  ? "bg-accent-green/10 text-accent-green"
+                  ? "bg-accent-green/10 text-accent-green-text"
                   : "bg-muted text-muted-foreground"
               }`}
             >
