@@ -346,7 +346,7 @@ export default function NuovoPreventivoPage() {
           </Button>
 
           {/* Totals */}
-          <div className="flex flex-col items-end gap-2 pt-4 border-t border-border">
+          <div className="flex flex-col items-end gap-3 pt-6 border-t border-border">
             <div className="flex items-center gap-4 text-sm">
               <span className="text-muted-foreground">Subtotale:</span>
               <span className="font-medium w-28 text-right">€{subtotal.toLocaleString("it-IT", { minimumFractionDigits: 2 })}</span>
