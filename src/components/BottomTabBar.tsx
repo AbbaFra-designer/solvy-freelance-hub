@@ -1,4 +1,4 @@
-import { Home, LayoutGrid, Settings, User, Shield } from "lucide-react";
+import { Home, LayoutGrid, Settings, User, Shield, FileText } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
