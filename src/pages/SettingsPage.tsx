@@ -1,3 +1,5 @@
+import { Landmark, FileText, Link2 } from "lucide-react";
+
 const SettingsPage = () => {
   return (
     <div className="p-4 md:p-8 max-w-3xl mx-auto space-y-8">
@@ -25,7 +27,38 @@ const SettingsPage = () => {
           <Field label="Codice Fiscale" defaultValue="RSSMRC90A01H501Z" />
           <Field label="Codice ATECO" defaultValue="62.01.00" />
           <Field label="Coefficiente di redditività" defaultValue="67%" />
-          <Field label="Indirizzo" defaultValue="Via Roma 42, Milano" className="sm:col-span-2" />
+          <Field label="Codice SDI" defaultValue="3C984HL" />
+          <Field label="Indirizzo" defaultValue="Via Roma 42, Milano" />
+        </div>
+      </Section>
+
+      {/* Bank Connection */}
+      <Section title="Collegamento Banca">
+        <div className="space-y-3">
+          <IntegrationRow
+            icon={<Landmark className="w-4 h-4" />}
+            name="Conto corrente bancario"
+            description="Collega il tuo conto per monitorare entrate e uscite"
+            connected={false}
+          />
+        </div>
+      </Section>
+
+      {/* Fatturazione Elettronica */}
+      <Section title="Fatturazione Elettronica">
+        <div className="space-y-3">
+          <IntegrationRow
+            icon={<FileText className="w-4 h-4" />}
+            name="Fiscozen"
+            description="Gestione fiscale e dichiarazioni per forfettari"
+            connected={true}
+          />
+          <IntegrationRow
+            icon={<FileText className="w-4 h-4" />}
+            name="Fatture in Cloud"
+            description="Invio e ricezione fatture elettroniche"
+            connected={false}
+          />
         </div>
       </Section>
 
@@ -38,21 +71,6 @@ const SettingsPage = () => {
         </div>
       </Section>
 
-      {/* Integrations */}
-      <Section title="Integrazioni connesse">
-        <div className="space-y-3">
-          {["Google Calendar", "Stripe", "Fatture in Cloud"].map((name) => (
-            <div
-              key={name}
-              className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 text-sm"
-            >
-              <span className="text-foreground">{name}</span>
-              <span className="text-xs text-muted-foreground">Connesso</span>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       {/* Save */}
       <button className="gradient-accent px-8 py-3 rounded-lg font-medium text-sm text-foreground hover:opacity-90 transition-opacity">
         Salva modifiche
@@ -60,6 +78,41 @@ const SettingsPage = () => {
     </div>
   );
 };
+
+function IntegrationRow({
+  icon,
+  name,
+  description,
+  connected,
+}: {
+  icon: React.ReactNode;
+  name: string;
+  description: string;
+  connected: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between p-4 rounded-xl border border-border bg-card">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground">
+          {icon}
+        </div>
+        <div>
+          <p className="text-sm font-medium text-foreground">{name}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+      </div>
+      <button
+        className={`text-xs font-medium px-4 py-2 rounded-lg transition-colors ${
+          connected
+            ? "bg-accent-green/10 text-accent-green"
+            : "bg-secondary text-muted-foreground hover:bg-muted"
+        }`}
+      >
+        {connected ? "Connesso" : "Collega"}
+      </button>
+    </div>
+  );
+}
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
