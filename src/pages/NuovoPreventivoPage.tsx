@@ -289,7 +289,7 @@ export default function NuovoPreventivoPage() {
             Tabella Prezzi
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 pt-2">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
