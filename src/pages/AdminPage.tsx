@@ -79,7 +79,7 @@ const AdminPage = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard label="Utenti" value={users.length} icon={<Users className="w-4 h-4" />} />
         <StatCard label="Clienti totali" value={users.reduce((s, u) => s + u.clients.length, 0)} icon={<Users className="w-4 h-4" />} />
-        <StatCard label="Fornitori totali" value={users.reduce((s, u) => s + u.suppliers.length, 0)} icon={<Truck className="w-4 h-4" />} />
+        <StatCard label="Collaboratori totali" value={users.reduce((s, u) => s + u.suppliers.length, 0)} icon={<Truck className="w-4 h-4" />} />
         <StatCard label="Bozze email" value={users.reduce((s, u) => s + u.drafts.length, 0)} icon={<Mail className="w-4 h-4" />} />
       </div>
 
@@ -109,7 +109,7 @@ const AdminPage = () => {
                   <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
                     <span>{u.clients.length} clienti</span>
                     <span>·</span>
-                    <span>{u.suppliers.length} fornitori</span>
+                    <span>{u.suppliers.length} collaboratori</span>
                     <span>·</span>
                     <span>{u.drafts.length} bozze</span>
                   </div>
@@ -160,7 +160,7 @@ const AdminPage = () => {
 
                   {/* Suppliers */}
                   {u.suppliers.length > 0 && (
-                    <DetailSection title={`Fornitori (${u.suppliers.length})`}>
+                    <DetailSection title={`Collaboratori (${u.suppliers.length})`}>
                       <div className="space-y-2">
                         {u.suppliers.map(s => (
                           <div key={s.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
