@@ -284,7 +284,7 @@ function SuppliersTab() {
 
   const remove = async (id: string) => {
     await supabase.from("suppliers").delete().eq("id", id);
-    toast.success("Fornitore eliminato");
+    toast.success("Collaboratore eliminato");
     load();
   };
 
