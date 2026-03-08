@@ -126,7 +126,7 @@ export default function NuovoPreventivoPage() {
       new Date(dataPreventivo.getTime() + parseInt(validitaGiorni) * 86400000),
       "yyyy-MM-dd"
     ),
-    stato: "bozza" as const,
+    stato: isEditing ? originalStato : "bozza" as const,
     brief: `<p>${brief}</p>`,
     voci,
     ivaPercentuale: ivaEnabled ? 22 : 0,
