@@ -107,13 +107,19 @@ function QuickCard({
   title,
   description,
   icon,
+  href,
 }: {
   title: string;
   description: string;
   icon: React.ReactNode;
+  href?: string;
 }) {
+  const navigate = useNavigate();
   return (
-    <div className="p-5 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group">
+    <div
+      onClick={() => href && navigate(href)}
+      className="p-5 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group"
+    >
       <div className="w-11 h-11 rounded-lg bg-accent-green/10 text-accent-green flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
         {icon}
       </div>
