@@ -1,8 +1,9 @@
-import { Home, LayoutGrid, Settings, User } from "lucide-react";
+import { Home, LayoutGrid, Settings, User, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
-const navItems = [
+const baseNavItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Apps", url: "/apps", icon: LayoutGrid },
   { title: "Impostazioni", url: "/settings", icon: Settings },
@@ -11,6 +12,11 @@ const navItems = [
 
 export function BottomTabBar() {
   const location = useLocation();
+  const { isAdmin } = useAuth();
+
+  const navItems = isAdmin
+    ? [...baseNavItems, { title: "Admin", url: "/admin", icon: Shield }]
+    : baseNavItems;
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50 safe-area-bottom">

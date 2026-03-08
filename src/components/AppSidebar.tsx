@@ -1,9 +1,10 @@
-import { Home, LayoutGrid, Settings, User } from "lucide-react";
+import { Home, LayoutGrid, Settings, User, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 
-const navItems = [
+const baseNavItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Apps", url: "/apps", icon: LayoutGrid },
   { title: "Settings", url: "/settings", icon: Settings },
@@ -12,6 +13,11 @@ const navItems = [
 export function AppSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAdmin } = useAuth();
+
+  const navItems = isAdmin
+    ? [...baseNavItems, { title: "Admin", url: "/admin", icon: Shield }]
+    : baseNavItems;
 
   return (
     <aside className="hidden md:flex flex-col w-16 lg:w-56 min-h-screen border-r border-border bg-sidebar shrink-0 transition-all duration-200">
