@@ -15,6 +15,7 @@ import { Preventivo, PreventivoStatus } from "@/types/preventivo";
 import { EmailModal } from "@/components/preventivi/EmailModal";
 import { generatePDF } from "@/lib/preventivoPdf";
 import { usePreventivi } from "@/context/PreventiviContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 const statusConfig: Record<PreventivoStatus, { label: string; className: string }> = {
@@ -29,11 +30,18 @@ type SortField = "numero" | "nomeProgetto" | "nomeCliente" | "dataEmissione" | "
 export default function PreventiviPage() {
   const navigate = useNavigate();
   const { preventivi, deletePreventivo } = usePreventivi();
+  const { profile } = useAuth();
   const [search, setSearch] = useState("");
   const [sortField, setSortField] = useState<SortField>("dataEmissione");
   const [sortAsc, setSortAsc] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [emailPreventivo, setEmailPreventivo] = useState<Preventivo | null>(null);
+
+  const pdfColors = profile ? {
+    colorStart: (profile as any).pdf_color_start || "#AAFF45",
+    colorEnd: (profile as any).pdf_color_end || "#FF6B1A",
+    mode: ((profile as any).pdf_color_mode || "gradient") as "gradient" | "colorful",
+  } : undefined;
 
   const getImporto = (p: Preventivo) =>
     p.voci.reduce((s, v) => s + v.quantita * v.prezzoUnitario, 0);
@@ -73,7 +81,7 @@ export default function PreventiviPage() {
   };
 
   const handleDownload = (p: Preventivo) => {
-    generatePDF(p);
+    generatePDF(p, pdfColors);
     toast.success("PDF scaricato");
   };
 

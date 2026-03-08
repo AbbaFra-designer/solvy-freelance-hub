@@ -18,6 +18,7 @@ import { PreventivoVoce, defaultTermini } from "@/types/preventivo";
 import { EmailModal } from "@/components/preventivi/EmailModal";
 import { generatePDF } from "@/lib/preventivoPdf";
 import { usePreventivi } from "@/context/PreventiviContext";
+import { useAuth } from "@/context/AuthContext";
 import { toast } from "sonner";
 
 const emptyVoce = (): PreventivoVoce => ({
@@ -32,7 +33,14 @@ export default function NuovoPreventivoPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { getPreventivo, addPreventivo, updatePreventivo } = usePreventivi();
+  const { profile } = useAuth();
   const isEditing = !!id;
+
+  const pdfColors = profile ? {
+    colorStart: (profile as any).pdf_color_start || "#AAFF45",
+    colorEnd: (profile as any).pdf_color_end || "#FF6B1A",
+    mode: ((profile as any).pdf_color_mode || "gradient") as "gradient" | "colorful",
+  } : undefined;
   const [originalStato, setOriginalStato] = useState<"bozza" | "inviato" | "accettato" | "rifiutato">("bozza");
 
   const [showEmail, setShowEmail] = useState(false);
@@ -163,7 +171,7 @@ export default function NuovoPreventivoPage() {
     if (!validate()) return;
     const p = buildPreventivo();
     if (isEditing) updatePreventivo(p);
-    generatePDF(p);
+    generatePDF(p, pdfColors);
     toast.success("PDF generato e scaricato");
   };
 

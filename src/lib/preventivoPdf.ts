@@ -3,13 +3,27 @@ import autoTable from "jspdf-autotable";
 import { Preventivo } from "@/types/preventivo";
 
 // ── Solvy Design System ──
-const GREEN: [number, number, number] = [170, 255, 69];
-const ORANGE: [number, number, number] = [255, 107, 26];
+const DEFAULT_GREEN: [number, number, number] = [170, 255, 69];
+const DEFAULT_ORANGE: [number, number, number] = [255, 107, 26];
 const DARK: [number, number, number] = [33, 33, 33];
 const MUTED: [number, number, number] = [115, 115, 115];
 const SOFT: [number, number, number] = [200, 200, 200];
 const BG: [number, number, number] = [252, 252, 252];
 const WHITE: [number, number, number] = [255, 255, 255];
+
+export interface PdfColors {
+  colorStart: string; // hex
+  colorEnd: string;   // hex
+  mode: "gradient" | "colorful";
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [parseInt(h.substring(0, 2), 16), parseInt(h.substring(2, 4), 16), parseInt(h.substring(4, 6), 16)];
+}
+
+let COLOR_START: [number, number, number] = DEFAULT_GREEN;
+let COLOR_END: [number, number, number] = DEFAULT_ORANGE;
 
 function gradient(doc: jsPDF, x: number, y: number, w: number, h: number) {
   const steps = 30;
@@ -17,9 +31,9 @@ function gradient(doc: jsPDF, x: number, y: number, w: number, h: number) {
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
     doc.setFillColor(
-      GREEN[0] + (ORANGE[0] - GREEN[0]) * t,
-      GREEN[1] + (ORANGE[1] - GREEN[1]) * t,
-      GREEN[2] + (ORANGE[2] - GREEN[2]) * t,
+      COLOR_START[0] + (COLOR_END[0] - COLOR_START[0]) * t,
+      COLOR_START[1] + (COLOR_END[1] - COLOR_START[1]) * t,
+      COLOR_START[2] + (COLOR_END[2] - COLOR_START[2]) * t,
     );
     doc.rect(x + i * sw, y, sw + 0.5, h, "F");
   }
@@ -29,9 +43,9 @@ function glow(doc: jsPDF, pw: number, ph: number) {
   for (let i = 0; i < 20; i++) {
     const t = i / 20;
     doc.setFillColor(
-      GREEN[0] + (ORANGE[0] - GREEN[0]) * t,
-      GREEN[1] + (ORANGE[1] - GREEN[1]) * t,
-      GREEN[2] + (ORANGE[2] - GREEN[2]) * t,
+      COLOR_START[0] + (COLOR_END[0] - COLOR_START[0]) * t,
+      COLOR_START[1] + (COLOR_END[1] - COLOR_START[1]) * t,
+      COLOR_START[2] + (COLOR_END[2] - COLOR_START[2]) * t,
     );
     doc.setGState(doc.GState({ opacity: 0.035 + t * 0.025 }));
     doc.circle(pw + 15, ph + 15, 130 - i * 6, "F");
@@ -50,7 +64,10 @@ function card(doc: jsPDF, x: number, y: number, w: number, h: number, r = 4) {
   doc.roundedRect(x, y, w, h, r, r, "F");
 }
 
-export function generatePDF(p: Preventivo) {
+export function generatePDF(p: Preventivo, colors?: PdfColors) {
+  // Set custom colors
+  COLOR_START = colors?.colorStart ? hexToRgb(colors.colorStart) : DEFAULT_GREEN;
+  COLOR_END = colors?.colorEnd ? hexToRgb(colors.colorEnd) : DEFAULT_ORANGE;
   const doc = new jsPDF("l", "mm", "a4");
   const pw = 297;
   const ph = 210;
