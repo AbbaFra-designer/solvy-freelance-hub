@@ -364,7 +364,7 @@ export default function NuovoPreventivoPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 pt-4">
+          <div className="grid gap-5 sm:grid-cols-2 pt-6">
             <div className="space-y-2">
               <Label>Tempistiche stimate</Label>
               <Input value={tempistiche} onChange={(e) => setTempistiche(e.target.value)} placeholder="Es. 4 settimane a partire dall'approvazione" />
