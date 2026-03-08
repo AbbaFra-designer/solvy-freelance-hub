@@ -21,8 +21,12 @@ interface RssItem {
   pubDate?: string;
 }
 
+const CORS_PROXIES = [
+  (url: string) => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+  (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+];
+
 const RSS2JSON_BASE = "https://api.rss2json.com/v1/api.json?rss_url=";
-const ALLORIGINS_BASE = "https://api.allorigins.win/get?url=";
 
 function matchesKeywords(text: string): boolean {
   const lower = text.toLowerCase();
@@ -38,7 +42,6 @@ function extractItemsFromHtml(html: string, source: BandiSource): BandiItem[] {
   const items: BandiItem[] = [];
   const now = new Date().toISOString();
 
-  // Extract text blocks separated by common separators
   const titleRegex = /<(?:h[1-4]|a|li|strong)[^>]*>([\s\S]*?)<\/(?:h[1-4]|a|li|strong)>/gi;
   const linkRegex = /href=["']([^"']+)["']/gi;
 
@@ -72,30 +75,23 @@ function extractItemsFromHtml(html: string, source: BandiSource): BandiItem[] {
     }
   });
 
-  // If no keyword matches found, add source as single entry
-  if (items.length === 0) {
-    const bodyText = html.replace(/<[^>]+>/g, " ").substring(0, 2000);
-    if (matchesKeywords(bodyText)) {
-      items.push({
-        id: `${source.id}-page`,
-        title: source.name,
-        link: source.url,
-        description: "Nuove opportunità disponibili – visita il sito per i dettagli.",
-        sourceId: source.id,
-        sourceName: source.name,
-        category: source.category,
-        fetchedAt: now,
-        isNew: true,
-      });
-    }
-  }
-
   return items;
+}
+
+async function fetchWithTimeout(url: string, timeoutMs = 15000): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    return res;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function fetchRssSource(source: BandiSource): Promise<BandiItem[]> {
   const url = `${RSS2JSON_BASE}${encodeURIComponent(source.url)}`;
-  const res = await fetch(url);
+  const res = await fetchWithTimeout(url);
   if (!res.ok) throw new Error(`RSS fetch failed: ${res.status}`);
   const data = await res.json();
 
@@ -121,12 +117,21 @@ async function fetchRssSource(source: BandiSource): Promise<BandiItem[]> {
 }
 
 async function fetchPageSource(source: BandiSource): Promise<BandiItem[]> {
-  const url = `${ALLORIGINS_BASE}${encodeURIComponent(source.url)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Page fetch failed: ${res.status}`);
-  const data = await res.json();
-  if (!data.contents) return [];
-  return extractItemsFromHtml(data.contents, source);
+  // Try multiple CORS proxies
+  for (const proxy of CORS_PROXIES) {
+    try {
+      const url = proxy(source.url);
+      const res = await fetchWithTimeout(url);
+      if (!res.ok) continue;
+      const data = await res.json();
+      const html = data.contents || data;
+      if (typeof html !== "string" || !html) continue;
+      return extractItemsFromHtml(html, source);
+    } catch {
+      continue;
+    }
+  }
+  throw new Error("All proxies failed");
 }
 
 export interface SourceStatus {
@@ -155,22 +160,38 @@ export function useBandiFetch() {
             source.type === "rss"
               ? await fetchRssSource(source)
               : await fetchPageSource(source);
-          allItems.push(...result);
-          statuses.push({ id: source.id, status: "ok" });
+          
+          if (result.length > 0) {
+            allItems.push(...result);
+            statuses.push({ id: source.id, status: "ok" });
+          } else {
+            // No scraped results — show the source as a fallback entry
+            allItems.push({
+              id: `${source.id}-fallback`,
+              title: source.name,
+              link: source.url,
+              description: source.description,
+              sourceId: source.id,
+              sourceName: source.name,
+              category: source.category,
+              fetchedAt: new Date().toISOString(),
+              isNew: false,
+            });
+            statuses.push({ id: source.id, status: "ok" });
+          }
         } catch {
           statuses.push({ id: source.id, status: "error" });
-          // Add a placeholder item indicating source error
+          // Show fallback with description even on error
           allItems.push({
-            id: `${source.id}-error`,
+            id: `${source.id}-fallback`,
             title: source.name,
             link: source.url,
-            description: "Fonte non disponibile al momento.",
+            description: source.description,
             sourceId: source.id,
             sourceName: source.name,
             category: source.category,
             fetchedAt: new Date().toISOString(),
             isNew: false,
-            error: true,
           });
         }
       })
