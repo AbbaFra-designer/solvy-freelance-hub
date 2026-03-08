@@ -1,5 +1,6 @@
 import { Home, LayoutGrid, Settings, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const navItems = [
@@ -10,11 +11,16 @@ const navItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <aside className="hidden md:flex flex-col w-16 lg:w-56 min-h-screen border-r border-border bg-sidebar shrink-0 transition-all duration-200">
       {/* Logo */}
-      <div className="flex items-center gap-2 px-4 h-16 border-b border-border">
+      <div
+        className="flex items-center gap-2 px-4 h-16 border-b border-border cursor-pointer hover:bg-secondary/50 transition-colors"
+        onClick={() => navigate("/about")}
+        title="Cos'è Solvy?"
+      >
         <div className="w-8 h-8 rounded-lg gradient-accent flex items-center justify-center">
           <span className="text-sm font-bold text-foreground">S</span>
         </div>
