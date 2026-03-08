@@ -295,11 +295,11 @@ export default function NuovoPreventivoPage() {
               <thead>
                 <tr className="border-b border-border text-muted-foreground">
                   <th className="text-left py-3 px-3 font-medium">Descrizione</th>
-                  <th className="text-center py-2 px-2 font-medium w-20">Qtà</th>
-                  <th className="text-center py-2 px-2 font-medium w-28">Unità</th>
-                  <th className="text-right py-2 px-2 font-medium w-28">Prezzo (€)</th>
-                  <th className="text-right py-2 px-2 font-medium w-28">Totale</th>
-                  <th className="w-10" />
+                  <th className="text-center py-3 px-3 font-medium w-20">Qtà</th>
+                  <th className="text-center py-3 px-3 font-medium w-28">Unità</th>
+                  <th className="text-right py-3 px-3 font-medium w-28">Prezzo (€)</th>
+                  <th className="text-right py-3 px-3 font-medium w-28">Totale</th>
+                  <th className="w-12" />
                 </tr>
               </thead>
               <tbody>
