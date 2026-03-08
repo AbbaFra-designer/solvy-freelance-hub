@@ -79,7 +79,7 @@ const AdminPage = () => {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard label="Utenti" value={users.length} icon={<Users className="w-4 h-4" />} />
         <StatCard label="Clienti totali" value={users.reduce((s, u) => s + u.clients.length, 0)} icon={<Users className="w-4 h-4" />} />
-        <StatCard label="Fornitori totali" value={users.reduce((s, u) => s + u.suppliers.length, 0)} icon={<Truck className="w-4 h-4" />} />
+        <StatCard label="Collaboratori totali" value={users.reduce((s, u) => s + u.suppliers.length, 0)} icon={<Truck className="w-4 h-4" />} />
         <StatCard label="Bozze email" value={users.reduce((s, u) => s + u.drafts.length, 0)} icon={<Mail className="w-4 h-4" />} />
       </div>
 
