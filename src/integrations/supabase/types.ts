@@ -122,6 +122,9 @@ export type Database = {
           notifica_push_pagamenti: boolean
           notifica_scadenze_fiscali: boolean
           partita_iva: string
+          pdf_color_end: string
+          pdf_color_mode: string
+          pdf_color_start: string
           report_settimanale: boolean
           telefono: string
           tipo_attivita: string
@@ -143,6 +146,9 @@ export type Database = {
           notifica_push_pagamenti?: boolean
           notifica_scadenze_fiscali?: boolean
           partita_iva?: string
+          pdf_color_end?: string
+          pdf_color_mode?: string
+          pdf_color_start?: string
           report_settimanale?: boolean
           telefono?: string
           tipo_attivita?: string
@@ -164,6 +170,9 @@ export type Database = {
           notifica_push_pagamenti?: boolean
           notifica_scadenze_fiscali?: boolean
           partita_iva?: string
+          pdf_color_end?: string
+          pdf_color_mode?: string
+          pdf_color_start?: string
           report_settimanale?: boolean
           telefono?: string
           tipo_attivita?: string
