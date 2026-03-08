@@ -14,7 +14,222 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      clients: {
+        Row: {
+          codice_fiscale: string
+          codice_sdi: string
+          created_at: string
+          email: string
+          id: string
+          indirizzo: string
+          nome: string
+          partita_iva: string
+          progetti_attivi: number
+          stato: Database["public"]["Enums"]["client_status"]
+          telefono: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          codice_fiscale?: string
+          codice_sdi?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          partita_iva?: string
+          progetti_attivi?: number
+          stato?: Database["public"]["Enums"]["client_status"]
+          telefono?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          codice_fiscale?: string
+          codice_sdi?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          partita_iva?: string
+          progetti_attivi?: number
+          stato?: Database["public"]["Enums"]["client_status"]
+          telefono?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      email_drafts: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          recipients: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body?: string
+          created_at?: string
+          id?: string
+          recipients?: string
+          subject?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          recipients?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          codice_ateco: string
+          codice_fiscale: string
+          codice_sdi: string
+          coefficiente_redditivita: string
+          cognome: string
+          created_at: string
+          email: string
+          id: string
+          indirizzo: string
+          nome: string
+          notifica_push_pagamenti: boolean
+          notifica_scadenze_fiscali: boolean
+          partita_iva: string
+          report_settimanale: boolean
+          telefono: string
+          tipo_attivita: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          codice_ateco?: string
+          codice_fiscale?: string
+          codice_sdi?: string
+          coefficiente_redditivita?: string
+          cognome?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          notifica_push_pagamenti?: boolean
+          notifica_scadenze_fiscali?: boolean
+          partita_iva?: string
+          report_settimanale?: boolean
+          telefono?: string
+          tipo_attivita?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          codice_ateco?: string
+          codice_fiscale?: string
+          codice_sdi?: string
+          coefficiente_redditivita?: string
+          cognome?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          notifica_push_pagamenti?: boolean
+          notifica_scadenze_fiscali?: boolean
+          partita_iva?: string
+          report_settimanale?: boolean
+          telefono?: string
+          tipo_attivita?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      suppliers: {
+        Row: {
+          codice_fiscale: string
+          codice_sdi: string
+          created_at: string
+          email: string
+          id: string
+          indirizzo: string
+          nome: string
+          partita_iva: string
+          stato: Database["public"]["Enums"]["supplier_status"]
+          telefono: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          codice_fiscale?: string
+          codice_sdi?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          partita_iva?: string
+          stato?: Database["public"]["Enums"]["supplier_status"]
+          telefono?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          codice_fiscale?: string
+          codice_sdi?: string
+          created_at?: string
+          email?: string
+          id?: string
+          indirizzo?: string
+          nome?: string
+          partita_iva?: string
+          stato?: Database["public"]["Enums"]["supplier_status"]
+          telefono?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          category: Database["public"]["Enums"]["tag_category"]
+          color: string
+          created_at: string
+          id: string
+          label: string
+          user_id: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["tag_category"]
+          color?: string
+          created_at?: string
+          id?: string
+          label: string
+          user_id: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["tag_category"]
+          color?: string
+          created_at?: string
+          id?: string
+          label?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +238,17 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      client_status:
+        | "progetti_attivi"
+        | "contatto_annuale"
+        | "fase_conoscenza"
+        | "progetto_concluso"
+      supplier_status:
+        | "collaborazione_fissa"
+        | "collaborazione_spot"
+        | "fase_conoscenza"
+        | "evitare"
+      tag_category: "clienti" | "fornitori" | "progetti" | "stato"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +375,20 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      client_status: [
+        "progetti_attivi",
+        "contatto_annuale",
+        "fase_conoscenza",
+        "progetto_concluso",
+      ],
+      supplier_status: [
+        "collaborazione_fissa",
+        "collaborazione_spot",
+        "fase_conoscenza",
+        "evitare",
+      ],
+      tag_category: ["clienti", "fornitori", "progetti", "stato"],
+    },
   },
 } as const
