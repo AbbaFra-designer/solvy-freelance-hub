@@ -310,7 +310,7 @@ function SuppliersTab() {
   return (
     <div className="mt-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">Lista Fornitori</h2>
+        <h2 className="text-base font-semibold text-foreground">Lista Collaboratori</h2>
         <button onClick={() => { setEditing({ nome: "", email: "", telefono: "", partita_iva: "", codice_fiscale: "", codice_sdi: "", indirizzo: "", stato: "fase_conoscenza" as SupplierStatus }); setIsNew(true); }}
           className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-accent text-sm font-medium text-foreground hover:opacity-90 transition-opacity">
           <Plus className="w-4 h-4" /> Aggiungi
