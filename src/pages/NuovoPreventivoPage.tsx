@@ -305,7 +305,7 @@ export default function NuovoPreventivoPage() {
               <tbody>
                 {voci.map((v) => (
                   <tr key={v.id} className="border-b border-border/50">
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Input value={v.descrizione} onChange={(e) => updateVoce(v.id, "descrizione", e.target.value)} placeholder="Attività..." className="h-9" />
                     </td>
                     <td className="py-2 px-2">
