@@ -80,6 +80,7 @@ const EmailBozzerPage = () => {
         subject: editing.subject,
         body: editing.body,
         reminder_at: editing.reminder_at || null,
+        tag_id: editing.tag_id || null,
       }).eq("id", editing.id!);
       if (error) { toast.error("Errore"); setSaving(false); return; }
     }
