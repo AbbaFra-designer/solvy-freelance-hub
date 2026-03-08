@@ -88,8 +88,8 @@ const HomePage = () => {
                   onClick={() => navigate("/email-bozzer")}
                   className="flex items-center gap-3 p-3.5 rounded-xl bg-card border border-border/50 shadow-card hover:shadow-card-hover transition-all cursor-pointer group"
                 >
-                  <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center shrink-0">
-                    <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                  <div className="w-9 h-9 rounded-lg bg-accent-orange/10 flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4 text-accent-orange-text" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{r.subject || "Senza oggetto"}</p>

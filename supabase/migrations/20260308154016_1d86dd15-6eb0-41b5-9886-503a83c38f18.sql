@@ -1,0 +1,1 @@
+ALTER TABLE public.email_drafts ADD COLUMN tag_id uuid DEFAULT NULL REFERENCES public.tags(id) ON DELETE SET NULL;
