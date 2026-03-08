@@ -18,6 +18,7 @@ const EmailBozzerPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [drafts, setDrafts] = useState<EmailDraft[]>([]);
+  const [tags, setTags] = useState<TagRow[]>([]);
   const [editing, setEditing] = useState<Partial<EmailDraft> | null>(null);
   const [isNew, setIsNew] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
