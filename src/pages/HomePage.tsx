@@ -26,6 +26,7 @@ const HomePage = () => {
   const routeMap: Record<string, string> = {
     "id-contact": "/id-contact",
     "email-bozzer": "/email-bozzer",
+    "preventivi": "/preventivi",
   };
 
   const loadReminders = useCallback(async () => {
