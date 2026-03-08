@@ -11,6 +11,7 @@ import SettingsPage from "@/pages/SettingsPage";
 import ProfilePage from "@/pages/ProfilePage";
 import IdContactPage from "@/pages/IdContactPage";
 import AboutPage from "@/pages/AboutPage";
+import EmailBozzerPage from "@/pages/EmailBozzerPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
