@@ -1,4 +1,4 @@
-import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon, Tag } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 
 type EmailDraft = Tables<"email_drafts">;
+type TagRow = Tables<"tags">;
 
 const EmailBozzerPage = () => {
   const navigate = useNavigate();
