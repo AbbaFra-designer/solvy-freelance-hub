@@ -109,7 +109,7 @@ const AdminPage = () => {
                   <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
                     <span>{u.clients.length} clienti</span>
                     <span>·</span>
-                    <span>{u.suppliers.length} fornitori</span>
+                    <span>{u.suppliers.length} collaboratori</span>
                     <span>·</span>
                     <span>{u.drafts.length} bozze</span>
                   </div>
