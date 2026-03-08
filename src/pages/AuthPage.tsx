@@ -68,6 +68,19 @@ const AuthPage = () => {
     }
   };
 
+  if (autoLogging) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 rounded-xl gradient-accent flex items-center justify-center mx-auto">
+            <span className="text-lg font-bold text-foreground">S</span>
+          </div>
+          <p className="text-sm text-muted-foreground">Accesso in corso…</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <div className="w-full max-w-sm space-y-6">
