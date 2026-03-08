@@ -14,6 +14,8 @@ import IdContactPage from "@/pages/IdContactPage";
 import AboutPage from "@/pages/AboutPage";
 import EmailBozzerPage from "@/pages/EmailBozzerPage";
 import AdminPage from "@/pages/AdminPage";
+import PreventiviPage from "@/pages/PreventiviPage";
+import NuovoPreventivoPage from "@/pages/NuovoPreventivoPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -43,6 +45,9 @@ function ProtectedRoutes() {
           <Route path="/id-contact" element={<IdContactPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/email-bozzer" element={<EmailBozzerPage />} />
+          <Route path="/preventivi" element={<PreventiviPage />} />
+          <Route path="/preventivi/nuovo" element={<NuovoPreventivoPage />} />
+          <Route path="/preventivi/modifica/:id" element={<NuovoPreventivoPage />} />
           <Route path="/admin" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
