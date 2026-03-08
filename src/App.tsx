@@ -13,6 +13,7 @@ import ProfilePage from "@/pages/ProfilePage";
 import IdContactPage from "@/pages/IdContactPage";
 import AboutPage from "@/pages/AboutPage";
 import EmailBozzerPage from "@/pages/EmailBozzerPage";
+import AdminPage from "@/pages/AdminPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -42,6 +43,7 @@ function ProtectedRoutes() {
           <Route path="/id-contact" element={<IdContactPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/email-bozzer" element={<EmailBozzerPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
