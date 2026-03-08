@@ -250,6 +250,15 @@ const EmailBozzerPage = () => {
                     {format(new Date(draft.reminder_at), "d MMM yyyy", { locale: it })}
                   </span>
                 )}
+                {draft.tag_id && (() => {
+                  const tag = tags.find(t => t.id === draft.tag_id);
+                  return tag ? (
+                    <span className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full mt-2 ml-1 ${tag.color}`}>
+                      <Tag className="w-3 h-3" />
+                      {tag.label}
+                    </span>
+                  ) : null;
+                })()}
               </div>
               <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button onClick={() => copyText(draft.body, `body-${draft.id}`)}
