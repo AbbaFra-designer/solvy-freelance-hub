@@ -37,22 +37,24 @@ function ProtectedRoutes() {
 
   return (
     <AppsProvider>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/apps" element={<AppsPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/id-contact" element={<IdContactPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/email-bozzer" element={<EmailBozzerPage />} />
-          <Route path="/preventivi" element={<PreventiviPage />} />
-          <Route path="/preventivi/nuovo" element={<NuovoPreventivoPage />} />
-          <Route path="/preventivi/modifica/:id" element={<NuovoPreventivoPage />} />
-          <Route path="/admin" element={<AdminPage />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <PreventiviProvider>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/apps" element={<AppsPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/id-contact" element={<IdContactPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/email-bozzer" element={<EmailBozzerPage />} />
+            <Route path="/preventivi" element={<PreventiviPage />} />
+            <Route path="/preventivi/nuovo" element={<NuovoPreventivoPage />} />
+            <Route path="/preventivi/modifica/:id" element={<NuovoPreventivoPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </PreventiviProvider>
     </AppsProvider>
   );
 }
