@@ -104,7 +104,7 @@ function IntegrationRow({
       <button
         className={`text-xs font-medium px-4 py-2 rounded-lg transition-colors ${
           connected
-            ? "bg-accent-green/10 text-accent-green"
+            ? "bg-accent-green/10 text-accent-green-text"
             : "bg-secondary text-muted-foreground hover:bg-muted"
         }`}
       >
