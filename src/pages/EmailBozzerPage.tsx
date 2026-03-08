@@ -48,7 +48,7 @@ const EmailBozzerPage = () => {
   };
 
   const openNew = () => {
-    setEditing({ recipients: "", subject: "", body: "", reminder_at: null });
+    setEditing({ recipients: "", subject: "", body: "", reminder_at: null, tag_id: null });
     setIsNew(true);
   };
 
