@@ -33,6 +33,7 @@ export default function NuovoPreventivoPage() {
   const { id } = useParams<{ id: string }>();
   const { getPreventivo, addPreventivo, updatePreventivo } = usePreventivi();
   const isEditing = !!id;
+  const [originalStato, setOriginalStato] = useState<"bozza" | "inviato" | "accettato" | "rifiutato">("bozza");
 
   const [showEmail, setShowEmail] = useState(false);
 
