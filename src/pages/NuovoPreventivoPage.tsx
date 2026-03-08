@@ -83,6 +83,7 @@ export default function NuovoPreventivoPage() {
     setIvaEnabled(existing.ivaPercentuale > 0);
     setTempistiche(existing.tempistiche);
     setTermini(existing.terminiCondizioni);
+    setOriginalStato(existing.stato);
     // Calculate validity days from dates
     const emDate = new Date(existing.dataEmissione);
     const valDate = new Date(existing.dataValidita);
