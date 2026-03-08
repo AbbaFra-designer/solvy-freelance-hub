@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bot, Calculator, Users } from "lucide-react";
+import { Users, FileText, Mail, UserCheck, Calendar, Newspaper, Landmark, LayoutGrid } from "lucide-react";
 
 interface AppItem {
   id: string;
@@ -11,24 +11,52 @@ interface AppItem {
 
 const initialApps: AppItem[] = [
   {
-    id: "invoice",
-    name: "AI Invoice Assistant",
-    description: "Genera e invia fatture automaticamente",
-    icon: <Bot className="w-6 h-6" />,
-    active: true,
-  },
-  {
-    id: "tax",
-    name: "Tax Tracker",
-    description: "Monitora le tue scadenze fiscali in tempo reale",
-    icon: <Calculator className="w-6 h-6" />,
-    active: true,
-  },
-  {
-    id: "crm",
-    name: "Client CRM",
-    description: "Gestisci contatti e pipeline progetti",
+    id: "id-contact",
+    name: "ID Contact",
+    description: "Rubrica clienti e contatti professionali",
     icon: <Users className="w-6 h-6" />,
+    active: true,
+  },
+  {
+    id: "preventivi",
+    name: "Preventivi",
+    description: "Crea e gestisci i tuoi preventivi",
+    icon: <FileText className="w-6 h-6" />,
+    active: true,
+  },
+  {
+    id: "email-bozze",
+    name: "Email Bozze",
+    description: "Bozze email pronte da inviare",
+    icon: <Mail className="w-6 h-6" />,
+    active: true,
+  },
+  {
+    id: "lead-clients",
+    name: "Lead & Clients",
+    description: "Gestisci lead e converti in clienti",
+    icon: <UserCheck className="w-6 h-6" />,
+    active: false,
+  },
+  {
+    id: "eventi-news",
+    name: "Eventi e News",
+    description: "Resta aggiornato su eventi e novità",
+    icon: <Calendar className="w-6 h-6" />,
+    active: false,
+  },
+  {
+    id: "bandi",
+    name: "Bandi",
+    description: "Scopri bandi e opportunità di finanziamento",
+    icon: <Landmark className="w-6 h-6" />,
+    active: false,
+  },
+  {
+    id: "smm-planner",
+    name: "SMM Planner",
+    description: "Pianifica i tuoi contenuti social media",
+    icon: <LayoutGrid className="w-6 h-6" />,
     active: false,
   },
 ];
@@ -59,7 +87,6 @@ const AppsPage = () => {
               app.active ? "border-accent-green/30 bg-card" : "border-border bg-secondary/30"
             }`}
           >
-            {/* Badge */}
             <span
               className={`absolute top-4 right-4 text-xs font-medium px-2.5 py-0.5 rounded-full ${
                 app.active
@@ -83,7 +110,6 @@ const AppsPage = () => {
             <h3 className="font-semibold text-foreground text-sm">{app.name}</h3>
             <p className="text-xs text-muted-foreground mt-1 mb-4">{app.description}</p>
 
-            {/* Toggle */}
             <button
               onClick={() => toggle(app.id)}
               className={`relative w-11 h-6 rounded-full transition-colors ${

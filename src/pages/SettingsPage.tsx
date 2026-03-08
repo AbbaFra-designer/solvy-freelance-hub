@@ -23,6 +23,8 @@ const SettingsPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Field label="Partita IVA" defaultValue="IT12345678901" />
           <Field label="Codice Fiscale" defaultValue="RSSMRC90A01H501Z" />
+          <Field label="Codice ATECO" defaultValue="62.01.00" />
+          <Field label="Coefficiente di redditività" defaultValue="67%" />
           <Field label="Indirizzo" defaultValue="Via Roma 42, Milano" className="sm:col-span-2" />
         </div>
       </Section>
