@@ -1,10 +1,15 @@
-import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save } from "lucide-react";
+import { ArrowLeft, Copy, Check, Plus, Pencil, Trash2, X, Save, CalendarIcon } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { it } from "date-fns/locale";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import { Tables } from "@/integrations/supabase/types";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 type EmailDraft = Tables<"email_drafts">;
 
@@ -33,7 +38,7 @@ const EmailBozzerPage = () => {
   };
 
   const openNew = () => {
-    setEditing({ recipients: "", subject: "", body: "" });
+    setEditing({ recipients: "", subject: "", body: "", reminder_at: null });
     setIsNew(true);
   };
 
@@ -55,6 +60,7 @@ const EmailBozzerPage = () => {
         recipients: editing.recipients || "",
         subject: editing.subject || "",
         body: editing.body || "",
+        reminder_at: editing.reminder_at || null,
       });
       if (error) { toast.error("Errore"); setSaving(false); return; }
     } else {
@@ -62,6 +68,7 @@ const EmailBozzerPage = () => {
         recipients: editing.recipients,
         subject: editing.subject,
         body: editing.body,
+        reminder_at: editing.reminder_at || null,
       }).eq("id", editing.id!);
       if (error) { toast.error("Errore"); setSaving(false); return; }
     }
@@ -109,6 +116,42 @@ const EmailBozzerPage = () => {
             <input value={editing.subject || ""} onChange={e => setEditing({ ...editing, subject: e.target.value })}
               placeholder="Oggetto dell'email"
               className="w-full text-sm bg-secondary/50 border border-border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-accent-green/40" />
+          </div>
+
+          <div>
+            <label className="text-xs text-muted-foreground mb-1.5 block">Promemoria</label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  className={cn(
+                    "w-full flex items-center gap-2 text-sm bg-secondary/50 border border-border rounded-lg px-3 py-2 text-left transition-colors hover:bg-secondary/70",
+                    editing.reminder_at ? "text-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="w-4 h-4 shrink-0" />
+                  {editing.reminder_at
+                    ? format(new Date(editing.reminder_at), "d MMMM yyyy", { locale: it })
+                    : "Imposta un promemoria…"}
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={editing.reminder_at ? new Date(editing.reminder_at) : undefined}
+                  onSelect={(date) => setEditing({ ...editing, reminder_at: date ? date.toISOString() : null })}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                  locale={it}
+                />
+              </PopoverContent>
+            </Popover>
+            {editing.reminder_at && (
+              <button onClick={() => setEditing({ ...editing, reminder_at: null })}
+                className="text-[11px] text-muted-foreground hover:text-destructive mt-1 transition-colors">
+                Rimuovi promemoria
+              </button>
+            )}
           </div>
 
           <div>
@@ -165,6 +208,12 @@ const EmailBozzerPage = () => {
                 <p className="text-xs text-muted-foreground truncate">{draft.recipients || "Nessun destinatario"}</p>
                 <h3 className="font-semibold text-foreground text-sm mt-1 truncate">{draft.subject}</h3>
                 <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 whitespace-pre-line">{draft.body}</p>
+                {draft.reminder_at && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-accent-orange-text bg-accent-orange/10 px-2 py-0.5 rounded-full mt-2">
+                    <CalendarIcon className="w-3 h-3" />
+                    {format(new Date(draft.reminder_at), "d MMM yyyy", { locale: it })}
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button onClick={() => copyText(draft.body, `body-${draft.id}`)}
