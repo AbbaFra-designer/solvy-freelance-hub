@@ -1,4 +1,4 @@
-import { TrendingUp, Percent, Package, Bell, CalendarIcon } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
