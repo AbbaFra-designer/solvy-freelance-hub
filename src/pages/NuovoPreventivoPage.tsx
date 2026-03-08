@@ -328,7 +328,7 @@ export default function NuovoPreventivoPage() {
                     <td className="py-3 px-3 text-right font-semibold">
                       €{(v.quantita * v.prezzoUnitario).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       {voci.length > 1 && (
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => setVoci((prev) => prev.filter((x) => x.id !== v.id))}>
                           <Trash2 className="w-4 h-4" />
