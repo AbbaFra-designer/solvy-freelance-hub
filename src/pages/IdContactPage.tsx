@@ -4,11 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 const businessInfo = [
-  { label: "Nome Attività", value: "Digital Reality di Abbatantuono Francesca" },
-  { label: "Codice Fiscale", value: "BBTFNC95M52L319G" },
-  { label: "Partita IVA", value: "12900170965" },
-  { label: "Indirizzo", value: "Via Abba 2, 20021, Bollate" },
-  { label: "SDI", value: "3C984HL" },
+  { label: "Nome", value: "Marco Rossi" },
+  { label: "Email", value: "marco@solvy.io" },
+  { label: "Telefono", value: "+39 333 1234567" },
+  { label: "Partita IVA", value: "IT12345678901" },
+  { label: "Codice Fiscale", value: "RSSMRC90A01H501Z" },
+  { label: "Codice SDI", value: "3C984HL" },
+  { label: "Indirizzo", value: "Via Roma 42, Milano" },
 ];
 
 const IdContactPage = () => {
