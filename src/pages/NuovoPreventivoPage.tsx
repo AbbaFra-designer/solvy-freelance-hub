@@ -173,7 +173,7 @@ export default function NuovoPreventivoPage() {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in pb-24">
+    <div className="space-y-8 animate-fade-in pb-28 px-1 sm:px-2">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
@@ -197,7 +197,7 @@ export default function NuovoPreventivoPage() {
             Copertina PDF
           </CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 sm:grid-cols-2">
+        <CardContent className="grid gap-5 sm:grid-cols-2 pt-2">
           <div className="space-y-2">
             <Label>Nome Progetto *</Label>
             <Input value={nomeProgetto} onChange={(e) => setNomeProgetto(e.target.value)} placeholder="Es. Restyling Sito Web" />
@@ -289,29 +289,29 @@ export default function NuovoPreventivoPage() {
             Tabella Prezzi
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-5 pt-2">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-muted-foreground">
-                  <th className="text-left py-2 px-2 font-medium">Descrizione</th>
-                  <th className="text-center py-2 px-2 font-medium w-20">Qtà</th>
-                  <th className="text-center py-2 px-2 font-medium w-28">Unità</th>
-                  <th className="text-right py-2 px-2 font-medium w-28">Prezzo (€)</th>
-                  <th className="text-right py-2 px-2 font-medium w-28">Totale</th>
-                  <th className="w-10" />
+                  <th className="text-left py-3 px-3 font-medium">Descrizione</th>
+                  <th className="text-center py-3 px-3 font-medium w-20">Qtà</th>
+                  <th className="text-center py-3 px-3 font-medium w-28">Unità</th>
+                  <th className="text-right py-3 px-3 font-medium w-28">Prezzo (€)</th>
+                  <th className="text-right py-3 px-3 font-medium w-28">Totale</th>
+                  <th className="w-12" />
                 </tr>
               </thead>
               <tbody>
                 {voci.map((v) => (
                   <tr key={v.id} className="border-b border-border/50">
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Input value={v.descrizione} onChange={(e) => updateVoce(v.id, "descrizione", e.target.value)} placeholder="Attività..." className="h-9" />
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Input type="number" min={1} value={v.quantita} onChange={(e) => updateVoce(v.id, "quantita", parseFloat(e.target.value) || 0)} className="h-9 text-center" />
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Select value={v.unita} onValueChange={(val) => updateVoce(v.id, "unita", val)}>
                         <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
                         <SelectContent>
@@ -322,13 +322,13 @@ export default function NuovoPreventivoPage() {
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       <Input type="number" min={0} step={0.01} value={v.prezzoUnitario} onChange={(e) => updateVoce(v.id, "prezzoUnitario", parseFloat(e.target.value) || 0)} className="h-9 text-right" />
                     </td>
-                    <td className="py-2 px-2 text-right font-semibold">
+                    <td className="py-3 px-3 text-right font-semibold">
                       €{(v.quantita * v.prezzoUnitario).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="py-2 px-2">
+                    <td className="py-3 px-3">
                       {voci.length > 1 && (
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => setVoci((prev) => prev.filter((x) => x.id !== v.id))}>
                           <Trash2 className="w-4 h-4" />
@@ -346,7 +346,7 @@ export default function NuovoPreventivoPage() {
           </Button>
 
           {/* Totals */}
-          <div className="flex flex-col items-end gap-2 pt-4 border-t border-border">
+          <div className="flex flex-col items-end gap-3 pt-6 border-t border-border">
             <div className="flex items-center gap-4 text-sm">
               <span className="text-muted-foreground">Subtotale:</span>
               <span className="font-medium w-28 text-right">€{subtotal.toLocaleString("it-IT", { minimumFractionDigits: 2 })}</span>
@@ -364,7 +364,7 @@ export default function NuovoPreventivoPage() {
             </div>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 pt-4">
+          <div className="grid gap-5 sm:grid-cols-2 pt-6">
             <div className="space-y-2">
               <Label>Tempistiche stimate</Label>
               <Input value={tempistiche} onChange={(e) => setTempistiche(e.target.value)} placeholder="Es. 4 settimane a partire dall'approvazione" />
