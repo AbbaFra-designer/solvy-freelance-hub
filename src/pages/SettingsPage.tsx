@@ -101,6 +101,9 @@ function PersonalTab() {
         notifica_scadenze_fiscali: profile.notifica_scadenze_fiscali,
         notifica_push_pagamenti: profile.notifica_push_pagamenti,
         report_settimanale: profile.report_settimanale,
+        pdf_color_mode: (profile as any).pdf_color_mode || "gradient",
+        pdf_color_start: (profile as any).pdf_color_start || "#AAFF45",
+        pdf_color_end: (profile as any).pdf_color_end || "#FF6B1A",
       });
     }
   }, [profile]);
