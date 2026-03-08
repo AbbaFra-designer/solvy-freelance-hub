@@ -277,7 +277,7 @@ function SuppliersTab() {
       const { error } = await supabase.from("suppliers").update(editing as any).eq("id", editing.id!);
       if (error) { toast.error("Errore"); setSaving(false); return; }
     }
-    toast.success(isNew ? "Fornitore aggiunto" : "Fornitore aggiornato");
+    toast.success(isNew ? "Collaboratore aggiunto" : "Collaboratore aggiornato");
     setEditing(null); setIsNew(false); setSaving(false);
     load();
   };
