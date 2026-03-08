@@ -2,319 +2,375 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Preventivo } from "@/types/preventivo";
 
-// ── Color palette ──
-const DARK = [33, 33, 33] as const;
-const GRAY = [150, 150, 150] as const;
-const LIGHT_GRAY = [210, 210, 210] as const;
-const TABLE_HEAD_BG = [235, 235, 235] as const;
-const TABLE_ALT_BG = [248, 248, 248] as const;
+// ── Solvy Design System Colors ──
+const ACID_GREEN: [number, number, number] = [170, 255, 69];   // #AAFF45
+const ORANGE: [number, number, number] = [255, 107, 26];       // #FF6B1A
+const DARK: [number, number, number] = [33, 33, 33];           // foreground
+const MUTED: [number, number, number] = [115, 115, 115];       // muted-foreground
+const LIGHT_MUTED: [number, number, number] = [180, 180, 180];
+const BG_SUBTLE: [number, number, number] = [250, 250, 250];   // secondary bg
+const WHITE: [number, number, number] = [255, 255, 255];
 
-// Soft gradient for bottom-right corner (peach/pink/lavender)
-function drawCornerGradient(doc: jsPDF, pw: number, ph: number) {
-  const size = 180;
-  const steps = 40;
+// ── Gradient bar (green → orange) ──
+function gradientBar(doc: jsPDF, x: number, y: number, w: number, h: number) {
+  const steps = 30;
+  const sw = w / steps;
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
-    const r = 255;
-    const g = 230 - t * 60;
-    const b = 220 - t * 30 + t * 80;
-    const alpha = 0.08 + t * 0.06;
+    doc.setFillColor(
+      ACID_GREEN[0] + (ORANGE[0] - ACID_GREEN[0]) * t,
+      ACID_GREEN[1] + (ORANGE[1] - ACID_GREEN[1]) * t,
+      ACID_GREEN[2] + (ORANGE[2] - ACID_GREEN[2]) * t,
+    );
+    doc.rect(x + i * sw, y, sw + 0.5, h, "F");
+  }
+}
+
+// ── Soft corner glow ──
+function cornerGlow(doc: jsPDF, pw: number, ph: number) {
+  const steps = 25;
+  for (let i = 0; i < steps; i++) {
+    const t = i / steps;
+    const r = ACID_GREEN[0] + (ORANGE[0] - ACID_GREEN[0]) * t;
+    const g = ACID_GREEN[1] + (ORANGE[1] - ACID_GREEN[1]) * t;
+    const b = ACID_GREEN[2] + (ORANGE[2] - ACID_GREEN[2]) * t;
     doc.setFillColor(r, g, b);
-    doc.setGState(doc.GState({ opacity: alpha }));
-    const radius = size - (size * i) / steps;
-    doc.circle(pw + 10, ph + 10, radius, "F");
+    doc.setGState(doc.GState({ opacity: 0.04 + t * 0.03 }));
+    const radius = 140 - (140 * i) / steps;
+    doc.circle(pw + 20, ph + 20, radius, "F");
   }
   doc.setGState(doc.GState({ opacity: 1 }));
 }
 
 function addLogo(doc: jsPDF, dataUrl: string, x: number, y: number, maxW: number, maxH: number) {
   if (!dataUrl) return;
-  try {
-    doc.addImage(dataUrl, "PNG", x, y, maxW, maxH);
-  } catch {
-    // ignore invalid images
-  }
+  try { doc.addImage(dataUrl, "PNG", x, y, maxW, maxH); } catch { /* skip */ }
 }
 
-// Black accent line
-function accentLine(doc: jsPDF, x: number, y: number, w: number) {
-  doc.setDrawColor(0, 0, 0);
-  doc.setLineWidth(1.5);
-  doc.line(x, y, x + w, y);
+// ── Accent line (gradient) ──
+function accentLineGradient(doc: jsPDF, x: number, y: number, w: number, h = 1.8) {
+  gradientBar(doc, x, y, w, h);
 }
 
 export function generatePDF(p: Preventivo) {
-  // Landscape A4
   const doc = new jsPDF("l", "mm", "a4");
-  const pw = 297; // landscape width
-  const ph = 210; // landscape height
-  const ml = 25; // margin left
-  const mr = 25;
+  const pw = 297;
+  const ph = 210;
+  const ml = 28;
+  const mr = 28;
   const cw = pw - ml - mr;
 
-  // ═══════════════════════════════════════
-  // PAGE 1 — COVER
-  // ═══════════════════════════════════════
-  drawCornerGradient(doc, pw, ph);
+  // ═══════════════════════════════════════════
+  //  PAGE 1 — COVER
+  // ═══════════════════════════════════════════
+  
+  // Top gradient bar
+  gradientBar(doc, 0, 0, pw, 4);
+  
+  // Corner glow
+  cornerGlow(doc, pw, ph);
 
   // Client logo top-left
-  if (p.logoCliente) addLogo(doc, p.logoCliente, ml, 18, 35, 25);
+  if (p.logoCliente) addLogo(doc, p.logoCliente, ml, 16, 32, 22);
 
   // Freelancer logo top-right
-  if (p.logoFreelancer) addLogo(doc, p.logoFreelancer, pw - mr - 30, 18, 30, 25);
+  if (p.logoFreelancer) addLogo(doc, p.logoFreelancer, pw - mr - 28, 16, 28, 22);
 
-  // "PREVENTIVO" label
+  // "PREVENTIVO" spaced label
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(13);
-  doc.setTextColor(...GRAY);
-  doc.setCharSpace(3);
-  doc.text("PREVENTIVO", ml, 90);
+  doc.setFontSize(11);
+  doc.setTextColor(...MUTED);
+  doc.setCharSpace(4);
+  doc.text("PREVENTIVO", ml, 75);
   doc.setCharSpace(0);
 
-  // Project name — big bold
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(36);
-  doc.setTextColor(...DARK);
-  const titleLines = doc.splitTextToSize(p.nomeProgetto, pw * 0.6);
-  doc.text(titleLines, ml, 108);
+  // Accent line under label
+  accentLineGradient(doc, ml, 79, 55);
 
-  // Bottom section — client info left, freelancer info right
-  const bottomY = ph - 30;
-
-  // Client info — bottom left
+  // Project name — big, bold, high contrast
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
+  doc.setFontSize(38);
   doc.setTextColor(...DARK);
-  doc.text(p.nomeCliente, ml, bottomY);
+  const titleLines = doc.splitTextToSize(p.nomeProgetto, pw * 0.55);
+  doc.text(titleLines, ml, 96);
+
+  // Subtitle
+  const titleEndY = 96 + titleLines.length * 14;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(14);
+  doc.setTextColor(...MUTED);
+  doc.text(p.sottotitolo || "", ml, titleEndY + 4);
+
+  // ── Bottom section ──
+  const botY = ph - 32;
+
+  // Client info — left
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(12);
+  doc.setTextColor(...DARK);
+  doc.text(p.nomeCliente, ml, botY);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(...GRAY);
-  doc.text(`Preventivo N° ${p.numero}`, ml, bottomY + 6);
-  doc.text(`Data: ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`, ml, bottomY + 11);
+  doc.setTextColor(...MUTED);
+  doc.text(`N° ${p.numero}  ·  ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`, ml, botY + 6);
 
-  // Freelancer info — bottom right
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(11);
-  doc.setTextColor(...DARK);
-  doc.text(p.sottotitolo || "Freelancer", pw - mr, bottomY, { align: "right" });
-
+  // Freelancer label — right
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(...GRAY);
-  doc.text(
-    `Validità: ${new Date(p.dataValidita).toLocaleDateString("it-IT")}`,
-    pw - mr, bottomY + 6, { align: "right" }
-  );
+  doc.setTextColor(...MUTED);
+  doc.text(`Validità fino al ${new Date(p.dataValidita).toLocaleDateString("it-IT")}`, pw - mr, botY + 6, { align: "right" });
 
-  // Collaborator logos
+  // Collaborator logos centered
   if (p.logoCollaboratori.length > 0) {
     const logoW = 18;
     const gap = 6;
     const totalW = p.logoCollaboratori.length * logoW + (p.logoCollaboratori.length - 1) * gap;
-    let startX = (pw - totalW) / 2;
+    let sx = (pw - totalW) / 2;
     p.logoCollaboratori.forEach((logo) => {
-      addLogo(doc, logo, startX, ph - 55, logoW, logoW);
-      startX += logoW + gap;
+      addLogo(doc, logo, sx, ph - 58, logoW, logoW);
+      sx += logoW + gap;
     });
   }
 
-  // ═══════════════════════════════════════
-  // PAGE 2 — ATTIVITÀ / PRICING
-  // ═══════════════════════════════════════
+  // Bottom gradient bar
+  gradientBar(doc, 0, ph - 4, pw, 4);
+
+  // ═══════════════════════════════════════════
+  //  PAGE 2 — ATTIVITÀ / PRICING
+  // ═══════════════════════════════════════════
   doc.addPage();
-  drawCornerGradient(doc, pw, ph);
+  gradientBar(doc, 0, 0, pw, 3);
+  cornerGlow(doc, pw, ph);
+
+  // Page label
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(52);
+  doc.setTextColor(240, 240, 240);
+  doc.text("02", pw - mr, 28, { align: "right" });
 
   // Header
-  accentLine(doc, ml, 20, 50);
+  accentLineGradient(doc, ml, 18, 50);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(24);
+  doc.setFontSize(22);
   doc.setTextColor(...DARK);
-  doc.text("Attività", ml, 32);
+  doc.text("Attività", ml, 30);
 
-  // Table
-  const unitaMap: Record<string, string> = { ore: "Ore", giorni: "Giorni", pezzi: "Pezzi", forfait: "Forfait" };
+  // ── Table ──
+  const unitaMap: Record<string, string> = { ore: "ora", giorni: "giorno", pezzi: "pz", forfait: "forfait" };
 
   autoTable(doc, {
-    startY: 44,
+    startY: 40,
     margin: { left: ml, right: mr },
-    head: [["", "ore", "costo"]],
+    head: [["Descrizione", "Qtà", "Unità", "Costo"]],
     body: p.voci.map((v) => [
       v.descrizione,
-      v.unita === "forfait" ? "-" : String(v.quantita),
-      `€ ${v.prezzoUnitario.toFixed(2)}/${unitaMap[v.unita]?.toLowerCase() || v.unita}`,
+      v.unita === "forfait" ? "—" : String(v.quantita),
+      unitaMap[v.unita] || v.unita,
+      `€ ${v.prezzoUnitario.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`,
     ]),
     styles: {
+      font: "helvetica",
       fontSize: 10,
-      cellPadding: { top: 5, bottom: 5, left: 8, right: 8 },
-      lineColor: [230, 230, 230],
+      cellPadding: { top: 6, bottom: 6, left: 8, right: 8 },
+      textColor: [...DARK] as [number, number, number],
+      lineColor: [232, 232, 232],
       lineWidth: 0.3,
     },
     headStyles: {
-      fillColor: [...TABLE_HEAD_BG] as [number, number, number],
-      textColor: [...DARK] as [number, number, number],
+      fillColor: [...DARK] as [number, number, number],
+      textColor: [...WHITE] as [number, number, number],
       fontStyle: "bold",
       fontSize: 9,
     },
     alternateRowStyles: {
-      fillColor: [...TABLE_ALT_BG] as [number, number, number],
+      fillColor: [...BG_SUBTLE] as [number, number, number],
     },
     columnStyles: {
-      0: { cellWidth: cw * 0.65 },
-      1: { cellWidth: cw * 0.15, halign: "center" },
-      2: { cellWidth: cw * 0.20, halign: "right" },
+      0: { cellWidth: cw * 0.55 },
+      1: { cellWidth: cw * 0.10, halign: "center" },
+      2: { cellWidth: cw * 0.15, halign: "center" },
+      3: { cellWidth: cw * 0.20, halign: "right", fontStyle: "bold" },
     },
   });
 
   const finalY = (doc as any).lastAutoTable?.finalY || 100;
 
-  // Total row
+  // ── Totals ──
   const subtotal = p.voci.reduce((s, v) => s + v.quantita * v.prezzoUnitario, 0);
   const iva = subtotal * (p.ivaPercentuale / 100);
   const total = subtotal + iva;
 
-  const totalRowY = finalY + 2;
-  doc.setFillColor(...TABLE_HEAD_BG);
-  doc.rect(ml, totalRowY, cw, 10, "F");
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(12);
-  doc.setTextColor(...DARK);
-  doc.text(`€ ${total.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`, pw - mr - 8, totalRowY + 7, { align: "right" });
+  let ty = finalY + 6;
 
-  // IVA note
+  // Subtotal + IVA lines
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8);
-  doc.setTextColor(...GRAY);
+  doc.setFontSize(10);
+  doc.setTextColor(...MUTED);
+  doc.text("Subtotale", pw - mr - 70, ty);
+  doc.text(`€ ${subtotal.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`, pw - mr, ty, { align: "right" });
+
   if (p.ivaPercentuale > 0) {
-    doc.text(`Subtotale: €${subtotal.toFixed(2)} + IVA ${p.ivaPercentuale}%`, ml, totalRowY + 16);
-  } else {
-    doc.text("IVA esclusa.", pw - mr - 8, totalRowY + 16, { align: "right" });
+    ty += 6;
+    doc.text(`IVA ${p.ivaPercentuale}%`, pw - mr - 70, ty);
+    doc.text(`€ ${iva.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`, pw - mr, ty, { align: "right" });
   }
 
-  // Two columns below: Tipologia & Condizioni di pagamento
-  const colY = totalRowY + 28;
-  const colW = cw / 2 - 10;
+  // Total with gradient background
+  ty += 10;
+  gradientBar(doc, pw - mr - 80, ty - 5, 80, 14);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(14);
+  doc.setTextColor(...DARK);
+  doc.text("TOTALE", pw - mr - 74, ty + 4);
+  doc.text(`€ ${total.toLocaleString("it-IT", { minimumFractionDigits: 2 })}`, pw - mr - 4, ty + 4, { align: "right" });
 
-  // Left column — Tempistiche / Tipologia
+  // IVA excluded note
+  ty += 16;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7.5);
+  doc.setTextColor(...LIGHT_MUTED);
+  doc.text(p.ivaPercentuale > 0 ? "Importi IVA inclusa." : "IVA esclusa.", pw - mr, ty, { align: "right" });
+
+  // ── Two columns: Tempistiche & Condizioni pagamento ──
+  const colY = Math.max(ty + 12, finalY + 55);
+  const colW = cw / 2 - 15;
+
   if (p.tempistiche) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(...DARK);
-    doc.text("Tipologia di collaborazione", ml, colY);
+    doc.text("Tempistiche", ml, colY);
+    accentLineGradient(doc, ml, colY + 2, 30, 1);
 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
     doc.setTextColor(80, 80, 80);
-    const tempLines = doc.splitTextToSize(p.tempistiche, colW);
-    doc.text(tempLines, ml, colY + 7);
+    const tLines = doc.splitTextToSize(p.tempistiche, colW);
+    doc.text(tLines, ml, colY + 9);
   }
 
-  // Right column — Condizioni di pagamento
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10);
   doc.setTextColor(...DARK);
-  doc.text("Condizioni di pagamento", ml + colW + 20, colY);
+  doc.text("Condizioni di pagamento", ml + colW + 30, colY);
+  accentLineGradient(doc, ml + colW + 30, colY + 2, 30, 1);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor(80, 80, 80);
-  const payText = `Pagamento tramite bonifico bancario entro 30gg dalla data di emissione della fattura.`;
-  const payLines = doc.splitTextToSize(payText, colW);
-  doc.text(payLines, ml + colW + 20, colY + 7);
+  const payLines = doc.splitTextToSize(
+    "Pagamento tramite bonifico bancario entro 30 giorni dalla data di emissione della fattura.",
+    colW
+  );
+  doc.text(payLines, ml + colW + 30, colY + 9);
 
-  // Closing signature — bottom right
+  // Signature bottom right
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(11);
-  doc.setTextColor(...GRAY);
-  doc.text("Cordiali saluti,", pw - mr, ph - 35, { align: "right" });
+  doc.setFontSize(10);
+  doc.setTextColor(...MUTED);
+  doc.text("Cordiali saluti,", pw - mr, ph - 28, { align: "right" });
   doc.setFont("helvetica", "bold");
   doc.setFontSize(12);
   doc.setTextColor(...DARK);
-  doc.text(p.sottotitolo || "Il Freelancer", pw - mr, ph - 28, { align: "right" });
+  doc.text(p.sottotitolo || "Il Freelancer", pw - mr, ph - 21, { align: "right" });
 
-  // ═══════════════════════════════════════
-  // PAGE 3 — TERMINI E CONDIZIONI
-  // ═══════════════════════════════════════
+  gradientBar(doc, 0, ph - 3, pw, 3);
+
+  // ═══════════════════════════════════════════
+  //  PAGE 3 — TERMINI E CONDIZIONI
+  // ═══════════════════════════════════════════
   doc.addPage();
+  gradientBar(doc, 0, 0, pw, 3);
 
-  // Page number top-right
+  // Big faded page number
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(48);
-  doc.setTextColor(220, 220, 220);
-  doc.text("03", pw - mr, 30, { align: "right" });
+  doc.setFontSize(56);
+  doc.setTextColor(235, 235, 235);
+  doc.text("03", pw - mr, 32, { align: "right" });
 
   // Header
-  accentLine(doc, ml, 20, 50);
+  accentLineGradient(doc, ml, 18, 50);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
+  doc.setFontSize(18);
   doc.setTextColor(...DARK);
-  doc.text("T&C", ml, 32);
+  doc.text("T&C", ml, 30);
 
-  // "TERMINI E CONDIZIONI" label on left
+  // Side label
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(9);
-  doc.setTextColor(...GRAY);
-  doc.setCharSpace(1.5);
-  doc.text("TERMINI E", ml, 50);
-  doc.text("CONDIZIONI", ml, 55);
+  doc.setFontSize(8);
+  doc.setTextColor(...LIGHT_MUTED);
+  doc.setCharSpace(2);
+  doc.text("TERMINI E", ml, 46);
+  doc.text("CONDIZIONI", ml, 51);
   doc.setCharSpace(0);
 
-  // Terms text — right area as numbered list
-  const tcX = ml + 55;
-  const tcW = cw - 55;
+  // Terms content — numbered, justified feel
+  const tcX = ml + 52;
+  const tcW = cw - 52;
+
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor(60, 60, 60);
+  doc.setTextColor(70, 70, 70);
 
-  // Split T&C into numbered items
   const rawTerms = p.terminiCondizioni.trim();
-  const termItems = rawTerms.split(/\n/).filter(line => line.trim().length > 0);
+  const termItems = rawTerms.split(/\n/).filter(l => l.trim().length > 0);
 
-  let tcY = 50;
+  let tcY = 46;
   termItems.forEach((item) => {
-    const cleanItem = item.trim();
-    const lines = doc.splitTextToSize(cleanItem, tcW);
-    if (tcY + lines.length * 4.5 > ph - 40) return; // don't overflow
+    const clean = item.trim();
+    const lines = doc.splitTextToSize(clean, tcW);
+    if (tcY + lines.length * 4.2 > ph - 38) return;
     doc.text(lines, tcX, tcY);
-    tcY += lines.length * 4.5 + 3;
+    tcY += lines.length * 4.2 + 3.5;
   });
 
-  // Closing message
-  tcY += 6;
-  if (tcY < ph - 55) {
+  // Closing
+  tcY += 8;
+  if (tcY < ph - 50) {
     doc.setFont("helvetica", "normal");
     doc.setFontSize(9);
-    doc.setTextColor(80, 80, 80);
+    doc.setTextColor(...MUTED);
     doc.text("Grazie per la tua considerazione. Sarà un piacere lavorare insieme!", tcX, tcY);
     doc.text("Resto a disposizione per eventuali domande o chiarimenti.", tcX, tcY + 5);
   }
 
-  // Footer bar
-  const footerY = ph - 18;
-  doc.setDrawColor(...LIGHT_GRAY);
-  doc.setLineWidth(0.5);
-  doc.line(ml, footerY, pw - mr, footerY);
+  // ── Footer ──
+  const footY = ph - 20;
+  gradientBar(doc, ml, footY, cw, 0.8);
 
   doc.setFont("helvetica", "bold");
   doc.setFontSize(8);
   doc.setTextColor(...DARK);
-  doc.text(p.sottotitolo || "Freelancer", ml, footerY + 6);
+  doc.text(p.sottotitolo || "Freelancer", ml, footY + 7);
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  doc.setTextColor(...GRAY);
-
-  // Footer info spread across
-  const footerItems = [
+  doc.setTextColor(...MUTED);
+  const fItems = [
     `N° ${p.numero}`,
-    `Data: ${new Date(p.dataEmissione).toLocaleDateString("it-IT")}`,
-    `Cliente: ${p.nomeCliente}`,
-    `Preventivo ${p.nomeProgetto}`,
+    new Date(p.dataEmissione).toLocaleDateString("it-IT"),
+    p.nomeCliente,
+    p.nomeProgetto,
   ];
-  const spacing = cw / (footerItems.length + 1);
-  footerItems.forEach((item, i) => {
-    doc.text(item, ml + spacing * (i + 1), footerY + 6, { align: "center" });
+  const fSpacing = (cw - 60) / fItems.length;
+  fItems.forEach((item, i) => {
+    doc.text(item, ml + 60 + fSpacing * i, footY + 7);
   });
+
+  gradientBar(doc, 0, ph - 3, pw, 3);
+
+  // ── Signature lines ──
+  const sigY = ph - 32;
+  doc.setDrawColor(...LIGHT_MUTED);
+  doc.setLineWidth(0.3);
+  doc.line(ml, sigY, ml + 60, sigY);
+  doc.line(pw - mr - 60, sigY, pw - mr, sigY);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(7);
+  doc.setTextColor(...MUTED);
+  doc.text("Il Freelancer", ml, sigY + 4);
+  doc.text("Il Cliente", pw - mr - 60, sigY + 4);
 
   // ── Download ──
   doc.save(`${p.numero}_${p.nomeProgetto.replace(/\s+/g, "_")}.pdf`);
