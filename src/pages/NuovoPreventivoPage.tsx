@@ -33,6 +33,7 @@ export default function NuovoPreventivoPage() {
   const { id } = useParams<{ id: string }>();
   const { getPreventivo, addPreventivo, updatePreventivo } = usePreventivi();
   const isEditing = !!id;
+  const [originalStato, setOriginalStato] = useState<"bozza" | "inviato" | "accettato" | "rifiutato">("bozza");
 
   const [showEmail, setShowEmail] = useState(false);
 
@@ -82,6 +83,7 @@ export default function NuovoPreventivoPage() {
     setIvaEnabled(existing.ivaPercentuale > 0);
     setTempistiche(existing.tempistiche);
     setTermini(existing.terminiCondizioni);
+    setOriginalStato(existing.stato);
     // Calculate validity days from dates
     const emDate = new Date(existing.dataEmissione);
     const valDate = new Date(existing.dataValidita);
@@ -124,7 +126,7 @@ export default function NuovoPreventivoPage() {
       new Date(dataPreventivo.getTime() + parseInt(validitaGiorni) * 86400000),
       "yyyy-MM-dd"
     ),
-    stato: "bozza" as const,
+    stato: isEditing ? originalStato : "bozza" as const,
     brief: `<p>${brief}</p>`,
     voci,
     ivaPercentuale: ivaEnabled ? 22 : 0,
