@@ -31,9 +31,9 @@ function gradient(doc: jsPDF, x: number, y: number, w: number, h: number) {
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
     doc.setFillColor(
-      GREEN[0] + (ORANGE[0] - GREEN[0]) * t,
-      GREEN[1] + (ORANGE[1] - GREEN[1]) * t,
-      GREEN[2] + (ORANGE[2] - GREEN[2]) * t,
+      COLOR_START[0] + (COLOR_END[0] - COLOR_START[0]) * t,
+      COLOR_START[1] + (COLOR_END[1] - COLOR_START[1]) * t,
+      COLOR_START[2] + (COLOR_END[2] - COLOR_START[2]) * t,
     );
     doc.rect(x + i * sw, y, sw + 0.5, h, "F");
   }
