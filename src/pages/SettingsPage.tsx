@@ -317,7 +317,7 @@ function SuppliersTab() {
         </button>
       </div>
       {suppliers.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground text-sm">Nessun fornitore ancora. Aggiungi il primo!</div>
+        <div className="text-center py-12 text-muted-foreground text-sm">Nessun collaboratore ancora. Aggiungi il primo!</div>
       ) : (
         <div className="space-y-3">
           {suppliers.map(item => (
