@@ -628,7 +628,7 @@ function ContactForm({ item, type, saving, onUpdate, onSave, onCancel, isNew }: 
     <div className="mt-6 space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-foreground">
-          {isNew ? "Nuovo" : "Modifica"} {type === "client" ? "Cliente" : "Fornitore"}
+          {isNew ? "Nuovo" : "Modifica"} {type === "client" ? "Cliente" : "Collaboratore"}
         </h2>
         <button onClick={onCancel} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
           <X className="w-4 h-4" />

@@ -160,7 +160,7 @@ const AdminPage = () => {
 
                   {/* Suppliers */}
                   {u.suppliers.length > 0 && (
-                    <DetailSection title={`Fornitori (${u.suppliers.length})`}>
+                    <DetailSection title={`Collaboratori (${u.suppliers.length})`}>
                       <div className="space-y-2">
                         {u.suppliers.map(s => (
                           <div key={s.id} className="flex items-center justify-between py-1.5 border-b border-border last:border-0">
