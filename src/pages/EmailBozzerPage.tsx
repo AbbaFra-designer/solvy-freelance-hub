@@ -60,6 +60,7 @@ const EmailBozzerPage = () => {
         recipients: editing.recipients || "",
         subject: editing.subject || "",
         body: editing.body || "",
+        reminder_at: editing.reminder_at || null,
       });
       if (error) { toast.error("Errore"); setSaving(false); return; }
     } else {
