@@ -1,5 +1,6 @@
 import { Home, LayoutGrid, Settings, User } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const navItems = [
