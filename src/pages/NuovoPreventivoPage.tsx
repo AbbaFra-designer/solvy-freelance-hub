@@ -325,7 +325,7 @@ export default function NuovoPreventivoPage() {
                     <td className="py-3 px-3">
                       <Input type="number" min={0} step={0.01} value={v.prezzoUnitario} onChange={(e) => updateVoce(v.id, "prezzoUnitario", parseFloat(e.target.value) || 0)} className="h-9 text-right" />
                     </td>
-                    <td className="py-2 px-2 text-right font-semibold">
+                    <td className="py-3 px-3 text-right font-semibold">
                       €{(v.quantita * v.prezzoUnitario).toLocaleString("it-IT", { minimumFractionDigits: 2 })}
                     </td>
                     <td className="py-2 px-2">
