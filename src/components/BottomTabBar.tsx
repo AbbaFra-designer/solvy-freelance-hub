@@ -5,8 +5,8 @@ import { useAuth } from "@/context/AuthContext";
 
 const baseNavItems = [
   { title: "Home", url: "/", icon: Home },
+  { title: "Preventivi", url: "/preventivi", icon: FileText },
   { title: "Apps", url: "/apps", icon: LayoutGrid },
-  { title: "Impostazioni", url: "/settings", icon: Settings },
   { title: "Profilo", url: "/profile", icon: User },
 ];
 
