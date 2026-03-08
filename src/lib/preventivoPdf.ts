@@ -3,13 +3,27 @@ import autoTable from "jspdf-autotable";
 import { Preventivo } from "@/types/preventivo";
 
 // ── Solvy Design System ──
-const GREEN: [number, number, number] = [170, 255, 69];
-const ORANGE: [number, number, number] = [255, 107, 26];
+const DEFAULT_GREEN: [number, number, number] = [170, 255, 69];
+const DEFAULT_ORANGE: [number, number, number] = [255, 107, 26];
 const DARK: [number, number, number] = [33, 33, 33];
 const MUTED: [number, number, number] = [115, 115, 115];
 const SOFT: [number, number, number] = [200, 200, 200];
 const BG: [number, number, number] = [252, 252, 252];
 const WHITE: [number, number, number] = [255, 255, 255];
+
+export interface PdfColors {
+  colorStart: string; // hex
+  colorEnd: string;   // hex
+  mode: "gradient" | "colorful";
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  return [parseInt(h.substring(0, 2), 16), parseInt(h.substring(2, 4), 16), parseInt(h.substring(4, 6), 16)];
+}
+
+let COLOR_START: [number, number, number] = DEFAULT_GREEN;
+let COLOR_END: [number, number, number] = DEFAULT_ORANGE;
 
 function gradient(doc: jsPDF, x: number, y: number, w: number, h: number) {
   const steps = 30;
