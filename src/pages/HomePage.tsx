@@ -52,6 +52,7 @@ const HomePage = () => {
             title="ID Contact"
             description="Rubrica clienti e contatti professionali"
             icon={<Users className="w-6 h-6" />}
+            href="/id-contact"
           />
           <QuickCard
             title="Preventivi"
