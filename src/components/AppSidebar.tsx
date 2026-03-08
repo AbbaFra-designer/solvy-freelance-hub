@@ -11,6 +11,7 @@ const navItems = [
 
 export function AppSidebar() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <aside className="hidden md:flex flex-col w-16 lg:w-56 min-h-screen border-r border-border bg-sidebar shrink-0 transition-all duration-200">
