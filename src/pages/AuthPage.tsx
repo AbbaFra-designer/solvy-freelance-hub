@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { toast } from "sonner";
@@ -10,6 +10,25 @@ const AuthPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [autoLogging, setAutoLogging] = useState(true);
+
+  useEffect(() => {
+    const autoLogin = async () => {
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: "freelancer@solvy.io",
+          password: "Freelancer2026!",
+        });
+        if (error) {
+          console.warn("Auto-login failed:", error.message);
+          setAutoLogging(false);
+        }
+      } catch {
+        setAutoLogging(false);
+      }
+    };
+    autoLogin();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,6 +67,19 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
+
+  if (autoLogging) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center space-y-3">
+          <div className="w-12 h-12 rounded-xl gradient-accent flex items-center justify-center mx-auto">
+            <span className="text-lg font-bold text-foreground">S</span>
+          </div>
+          <p className="text-sm text-muted-foreground">Accesso in corso…</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
