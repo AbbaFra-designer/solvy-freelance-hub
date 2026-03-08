@@ -208,6 +208,12 @@ const EmailBozzerPage = () => {
                 <p className="text-xs text-muted-foreground truncate">{draft.recipients || "Nessun destinatario"}</p>
                 <h3 className="font-semibold text-foreground text-sm mt-1 truncate">{draft.subject}</h3>
                 <p className="text-xs text-muted-foreground mt-1.5 line-clamp-2 whitespace-pre-line">{draft.body}</p>
+                {draft.reminder_at && (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-accent-orange-text bg-accent-orange/10 px-2 py-0.5 rounded-full mt-2">
+                    <CalendarIcon className="w-3 h-3" />
+                    {format(new Date(draft.reminder_at), "d MMM yyyy", { locale: it })}
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-1 shrink-0 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                 <button onClick={() => copyText(draft.body, `body-${draft.id}`)}
