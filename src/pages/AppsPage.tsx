@@ -41,7 +41,7 @@ const AppsPage = () => {
                   </span>
                 </div>
 
-                <div className="w-11 h-11 rounded-lg flex items-center justify-center mb-4 bg-accent-green/10 text-accent-green-text">
+                <div className={`w-11 h-11 rounded-lg flex items-center justify-center mb-4 ${app.color || "bg-accent-green/10 text-accent-green-text"}`}>
                   {app.icon}
                 </div>
 
@@ -54,7 +54,7 @@ const AppsPage = () => {
                 <div className="mt-4 flex items-center gap-3">
                   {app.url && (
                     <button
-                      onClick={() => navigate(app.url!)}
+                      onClick={() => navigate(app.url)}
                       className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium gradient-accent text-foreground hover:opacity-90 transition-opacity"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />

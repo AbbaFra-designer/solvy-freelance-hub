@@ -1,4 +1,4 @@
-import { TrendingUp, Percent, Package, Bell, Mail, Bot, Rocket, CalendarClock, Receipt, Users } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, Mail } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -15,20 +15,12 @@ const HomePage = () => {
   const [reminders, setReminders] = useState<any[]>([]);
 
   const displayName = profile?.nome || "utente";
-
   const today = new Date().toLocaleDateString("it-IT", {
     weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
   });
-
-  const routeMap: Record<string, string> = {
-    "id-contact": "/id-contact",
-    "email-bozzer": "/email-bozzer",
-    "preventivi": "/preventivi",
-    "bandi": "/bandi",
-  };
 
   const loadReminders = useCallback(async () => {
     if (!user) return;
@@ -41,7 +33,9 @@ const HomePage = () => {
     if (data) setReminders(data);
   }, [user]);
 
-  useEffect(() => { loadReminders(); }, [loadReminders]);
+  useEffect(() => {
+    loadReminders();
+  }, [loadReminders]);
 
   const getReminderLabel = (dateStr: string) => {
     const date = new Date(dateStr);
@@ -85,11 +79,7 @@ const HomePage = () => {
             {upcomingReminders.map((r) => {
               const label = getReminderLabel(r.reminder_at);
               return (
-                <div
-                  key={r.id}
-                  onClick={() => navigate("/email-bozzer")}
-                  className="flex items-center gap-3 p-3.5 rounded-xl bg-card border border-border/50 shadow-card hover:shadow-card-hover transition-all cursor-pointer group"
-                >
+                <div key={r.id} onClick={() => navigate("/email-bozzer")} className="flex items-center gap-3 p-3.5 rounded-xl bg-card border border-border/50 shadow-card hover:shadow-card-hover transition-all cursor-pointer group">
                   <div className="w-9 h-9 rounded-lg bg-accent-orange/10 flex items-center justify-center shrink-0">
                     <Mail className="w-4 h-4 text-accent-orange-text" />
                   </div>
@@ -107,48 +97,47 @@ const HomePage = () => {
         </section>
       )}
 
-      {/* Dove vuoi andare? */}
-      <section>
-        <h2 className="text-lg font-semibold text-foreground mb-4">Dove vuoi andare?</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-          {[
-            { label: "Kit Partenza", icon: Rocket, url: "/kit-partenza", color: "bg-accent-green/10 text-accent-green-text" },
-            { label: "Advisor AI", icon: Bot, url: "/advisor", color: "bg-[#1B4FDB]/10 text-[#1B4FDB]" },
-            { label: "Scadenzario", icon: CalendarClock, url: "/scadenzario", color: "bg-accent-orange/10 text-accent-orange-text" },
-            { label: "Prima Nota", icon: Receipt, url: "/prima-nota", color: "bg-[#7C4DFF]/10 text-[#7C4DFF]" },
-            { label: "Professionisti", icon: Users, url: "/professionisti", color: "bg-[#1A7A4A]/10 text-[#1A7A4A]" },
-          ].map((item) => (
-            <div
-              key={item.url}
-              onClick={() => navigate(item.url)}
-              className="p-4 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group text-center"
-            >
-              <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform`}>
-                <item.icon className="w-5 h-5" />
-              </div>
-              <p className="text-xs font-medium text-foreground">{item.label}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {activeApps.length > 0 && (
+      {/* ── Le tue App ── Solo app attive ── */}
+      {activeApps.length > 0 ? (
         <section>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Accesso rapido</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-foreground">Le tue App</h2>
+            <button
+              onClick={() => navigate("/apps")}
+              className="text-xs text-accent-orange-text hover:underline"
+            >
+              Gestisci →
+            </button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {activeApps.map((app) => (
               <div
                 key={app.id}
-                onClick={() => routeMap[app.id] && navigate(routeMap[app.id])}
-                className="p-5 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group"
+                onClick={() => app.url && navigate(app.url)}
+                className={`p-4 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 text-center ${
+                  app.url ? "cursor-pointer" : "opacity-60"
+                } group`}
               >
-                <div className="w-11 h-11 rounded-lg bg-accent-green/10 text-accent-green-text flex items-center justify-center mb-4 group-hover:scale-105 transition-transform">
+                <div className={`w-10 h-10 rounded-lg ${app.color || "bg-accent-green/10 text-accent-green-text"} flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform`}>
                   {app.icon}
                 </div>
-                <h3 className="font-semibold text-foreground text-sm">{app.name}</h3>
-                <p className="text-xs text-muted-foreground mt-1">{app.description}</p>
+                <p className="text-xs font-medium text-foreground">{app.name}</p>
               </div>
             ))}
+          </div>
+        </section>
+      ) : (
+        <section>
+          <div className="p-8 rounded-xl bg-card border border-border/50 text-center">
+            <Package className="w-10 h-10 text-muted-foreground mx-auto mb-3" />
+            <h3 className="font-semibold text-foreground">Nessuna app attiva</h3>
+            <p className="text-sm text-muted-foreground mt-1">Vai nella sezione Apps per attivare i tuoi strumenti</p>
+            <button
+              onClick={() => navigate("/apps")}
+              className="mt-4 px-4 py-2 rounded-lg text-sm font-medium gradient-accent text-foreground hover:opacity-90 transition-opacity"
+            >
+              Esplora Apps
+            </button>
           </div>
         </section>
       )}
@@ -157,7 +146,11 @@ const HomePage = () => {
 };
 
 function KpiCard({ title, value, subtitle, icon, variant }: { title: string; value: string; subtitle: string; icon: React.ReactNode; variant: "default" | "orange" | "green" }) {
-  const accentClasses = { default: "bg-secondary text-foreground", orange: "bg-accent-orange/10 text-accent-orange-text", green: "bg-accent-green/10 text-accent-green-text" };
+  const accentClasses = {
+    default: "bg-secondary text-foreground",
+    orange: "bg-accent-orange/10 text-accent-orange-text",
+    green: "bg-accent-green/10 text-accent-green-text"
+  };
   return (
     <div className="p-5 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-shadow border border-border/50">
       <div className="flex items-center justify-between mb-3">
