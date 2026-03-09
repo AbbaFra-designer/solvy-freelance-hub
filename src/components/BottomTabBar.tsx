@@ -3,20 +3,14 @@ import { NavLink } from "@/components/NavLink";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
-import { Bot, Rocket, CalendarClock, Receipt, Users } from "lucide-react";
 
 const primaryNav = [
   { title: "Home", url: "/", icon: Home },
   { title: "Apps", url: "/apps", icon: LayoutGrid },
-  { title: "Advisor", url: "/advisor", icon: Bot },
+  { title: "Settings", url: "/settings", icon: Settings },
 ];
 
 const moreItems = [
-  { title: "Kit Partenza", url: "/kit-partenza", icon: Rocket },
-  { title: "Scadenzario", url: "/scadenzario", icon: CalendarClock },
-  { title: "Prima Nota", url: "/prima-nota", icon: Receipt },
-  { title: "Professionisti", url: "/professionisti", icon: Users },
-  { title: "Impostazioni", url: "/settings", icon: Settings },
   { title: "Profilo", url: "/profile", icon: User },
 ];
 
