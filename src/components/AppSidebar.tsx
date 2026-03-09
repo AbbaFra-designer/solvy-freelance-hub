@@ -1,4 +1,4 @@
-import { Home, LayoutGrid, Settings, User, Shield, Bot, Rocket, CalendarClock, Receipt, Users } from "lucide-react";
+import { Home, LayoutGrid, Settings, User, Shield } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -7,11 +7,6 @@ import { useAuth } from "@/context/AuthContext";
 const baseNavItems = [
   { title: "Home", url: "/", icon: Home },
   { title: "Apps", url: "/apps", icon: LayoutGrid },
-  { title: "Advisor AI", url: "/advisor", icon: Bot },
-  { title: "Kit Partenza", url: "/kit-partenza", icon: Rocket },
-  { title: "Scadenzario", url: "/scadenzario", icon: CalendarClock },
-  { title: "Prima Nota", url: "/prima-nota", icon: Receipt },
-  { title: "Professionisti", url: "/professionisti", icon: Users },
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
