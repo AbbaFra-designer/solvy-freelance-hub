@@ -18,6 +18,11 @@ import AdminPage from "@/pages/AdminPage";
 import PreventiviPage from "@/pages/PreventiviPage";
 import NuovoPreventivoPage from "@/pages/NuovoPreventivoPage";
 import BandiPage from "@/pages/BandiPage";
+import AdvisorPage from "@/pages/AdvisorPage";
+import KitPartenzaPage from "@/pages/KitPartenzaPage";
+import ScadenzarioPage from "@/pages/ScadenzarioPage";
+import PrimaNotaPage from "@/pages/PrimaNotaPage";
+import ProfessionistiPage from "@/pages/ProfessionistiPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -52,6 +57,11 @@ function ProtectedRoutes() {
             <Route path="/preventivi/nuovo" element={<NuovoPreventivoPage />} />
             <Route path="/preventivi/modifica/:id" element={<NuovoPreventivoPage />} />
             <Route path="/bandi" element={<BandiPage />} />
+            <Route path="/advisor" element={<AdvisorPage />} />
+            <Route path="/kit-partenza" element={<KitPartenzaPage />} />
+            <Route path="/scadenzario" element={<ScadenzarioPage />} />
+            <Route path="/prima-nota" element={<PrimaNotaPage />} />
+            <Route path="/professionisti" element={<ProfessionistiPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />

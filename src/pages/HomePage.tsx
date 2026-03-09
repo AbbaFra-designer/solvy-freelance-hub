@@ -1,4 +1,4 @@
-import { TrendingUp, Percent, Package, Bell, Mail } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, Mail, Bot, Rocket, CalendarClock, Receipt, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -106,6 +106,31 @@ const HomePage = () => {
           </div>
         </section>
       )}
+
+      {/* Dove vuoi andare? */}
+      <section>
+        <h2 className="text-lg font-semibold text-foreground mb-4">Dove vuoi andare?</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {[
+            { label: "Kit Partenza", icon: Rocket, url: "/kit-partenza", color: "bg-accent-green/10 text-accent-green-text" },
+            { label: "Advisor AI", icon: Bot, url: "/advisor", color: "bg-[#1B4FDB]/10 text-[#1B4FDB]" },
+            { label: "Scadenzario", icon: CalendarClock, url: "/scadenzario", color: "bg-accent-orange/10 text-accent-orange-text" },
+            { label: "Prima Nota", icon: Receipt, url: "/prima-nota", color: "bg-[#7C4DFF]/10 text-[#7C4DFF]" },
+            { label: "Professionisti", icon: Users, url: "/professionisti", color: "bg-[#1A7A4A]/10 text-[#1A7A4A]" },
+          ].map((item) => (
+            <div
+              key={item.url}
+              onClick={() => navigate(item.url)}
+              className="p-4 rounded-xl bg-card shadow-card hover:shadow-card-hover transition-all border border-border/50 cursor-pointer group text-center"
+            >
+              <div className={`w-10 h-10 rounded-lg ${item.color} flex items-center justify-center mx-auto mb-2 group-hover:scale-105 transition-transform`}>
+                <item.icon className="w-5 h-5" />
+              </div>
+              <p className="text-xs font-medium text-foreground">{item.label}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {activeApps.length > 0 && (
         <section>
