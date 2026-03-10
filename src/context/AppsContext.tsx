@@ -22,7 +22,7 @@ const initialApps: AppItem[] = [
   { id: "email-bozzer", name: "Email Bozzer", description: "Bozze email pronte da inviare", icon: <Mail className="w-6 h-6" />, active: true, free: true, url: "/email-bozzer", color: "bg-accent-orange/10 text-accent-orange-text" },
   { id: "preventivi", name: "Preventivi", description: "Crea e gestisci i tuoi preventivi", icon: <FileText className="w-6 h-6" />, active: true, free: false, url: "/preventivi", color: "bg-secondary text-foreground" },
   { id: "bandi", name: "Bandi & Finanziamenti", description: "Bandi, premi e finanziamenti per designer e freelance", icon: <Landmark className="w-6 h-6" />, active: true, free: true, url: "/bandi", color: "bg-[#1B4FDB]/10 text-[#1B4FDB]" },
-  { id: "lead-clients", name: "Lead & Clients", description: "Gestisci lead e converti in clienti", icon: <UserCheck className="w-6 h-6" />, active: false, free: false, url: "", color: "bg-secondary text-foreground" },
+  { id: "lead-clients", name: "Lead & Clients", description: "Gestisci lead e converti in clienti", icon: <UserCheck className="w-6 h-6" />, active: true, free: false, url: "/lead-clients", color: "bg-secondary text-foreground" },
   { id: "eventi-news", name: "Eventi e News", description: "Resta aggiornato su eventi e novità", icon: <Calendar className="w-6 h-6" />, active: false, free: false, url: "", color: "bg-secondary text-foreground" },
   { id: "smm-planner", name: "SMM Planner", description: "Pianifica i tuoi contenuti social media", icon: <LayoutGrid className="w-6 h-6" />, active: false, free: false, url: "", color: "bg-secondary text-foreground" },
 ];

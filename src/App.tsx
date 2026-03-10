@@ -63,6 +63,7 @@ function ProtectedRoutes() {
             <Route path="/scadenzario" element={<ScadenzarioPage />} />
             <Route path="/prima-nota" element={<PrimaNotaPage />} />
             <Route path="/professionisti" element={<ProfessionistiPage />} />
+            <Route path="/lead-clients" element={<LeadClientsPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
