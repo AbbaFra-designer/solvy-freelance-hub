@@ -23,8 +23,11 @@ export type Database = {
           id: string
           indirizzo: string
           nome: string
+          note: string
           partita_iva: string
           progetti_attivi: number
+          progetti_completati: number
+          reminder_at: string | null
           stato: Database["public"]["Enums"]["client_status"]
           telefono: string
           updated_at: string
@@ -38,8 +41,11 @@ export type Database = {
           id?: string
           indirizzo?: string
           nome?: string
+          note?: string
           partita_iva?: string
           progetti_attivi?: number
+          progetti_completati?: number
+          reminder_at?: string | null
           stato?: Database["public"]["Enums"]["client_status"]
           telefono?: string
           updated_at?: string
@@ -53,8 +59,11 @@ export type Database = {
           id?: string
           indirizzo?: string
           nome?: string
+          note?: string
           partita_iva?: string
           progetti_attivi?: number
+          progetti_completati?: number
+          reminder_at?: string | null
           stato?: Database["public"]["Enums"]["client_status"]
           telefono?: string
           updated_at?: string
