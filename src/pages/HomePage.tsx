@@ -60,7 +60,7 @@ const HomePage = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <KpiCard title="Fatturato del mese" value="€ 3.240" subtitle="+12% vs mese scorso" icon={<TrendingUp className="w-5 h-5" />} variant="default" />
+        <KpiCard title="Fatturato del mese" value="€ 35.000" subtitle="+12% vs mese scorso" icon={<TrendingUp className="w-5 h-5" />} variant="default" />
         <KpiCard title="Tasse da accantonare" value="€ 486" subtitle="15% coefficiente ATECO 62.01" icon={<Percent className="w-5 h-5" />} variant="orange" />
         <KpiCard title="Pacchetti attivi" value={String(activeApps.length)} subtitle={`su ${apps.length} disponibili`} icon={<Package className="w-5 h-5" />} variant="green" />
       </div>
