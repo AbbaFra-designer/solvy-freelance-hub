@@ -23,6 +23,7 @@ import KitPartenzaPage from "@/pages/KitPartenzaPage";
 import ScadenzarioPage from "@/pages/ScadenzarioPage";
 import PrimaNotaPage from "@/pages/PrimaNotaPage";
 import ProfessionistiPage from "@/pages/ProfessionistiPage";
+import LeadClientsPage from "@/pages/LeadClientsPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
