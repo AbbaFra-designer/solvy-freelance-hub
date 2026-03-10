@@ -59,11 +59,25 @@ const HomePage = () => {
         <p className="text-muted-foreground text-sm mt-1 capitalize">{today}</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <KpiCard title="Fatturato del mese" value="€ 35.000" subtitle="+12% vs mese scorso" icon={<TrendingUp className="w-5 h-5" />} variant="default" />
-        <KpiCard title="Tasse da accantonare" value="€ 486" subtitle="15% coefficiente ATECO 62.01" icon={<Percent className="w-5 h-5" />} variant="orange" />
-        <KpiCard title="Pacchetti attivi" value={String(activeApps.length)} subtitle={`su ${apps.length} disponibili`} icon={<Package className="w-5 h-5" />} variant="green" />
-      </div>
+      {(() => {
+        const fatturato = 35000;
+        const coeff = profile?.coefficiente_redditivita ? parseFloat(profile.coefficiente_redditivita) : 0;
+        const codiceAteco = profile?.codice_ateco || "—";
+        const aliquotaForfettario = 15; // aliquota sostitutiva standard
+        const redditoImponibile = fatturato * (coeff / 100);
+        const tasse = Math.round(redditoImponibile * (aliquotaForfettario / 100));
+        const taxLabel = coeff > 0
+          ? `${coeff}% coeff. × ${aliquotaForfettario}% imposta · ATECO ${codiceAteco}`
+          : "Imposta il coefficiente nei Settings";
+
+        return (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <KpiCard title="Fatturato del mese" value={`€ ${fatturato.toLocaleString("it-IT")}`} subtitle="+12% vs mese scorso" icon={<TrendingUp className="w-5 h-5" />} variant="default" />
+            <KpiCard title="Tasse da accantonare" value={coeff > 0 ? `€ ${tasse.toLocaleString("it-IT")}` : "—"} subtitle={taxLabel} icon={<Percent className="w-5 h-5" />} variant="orange" />
+            <KpiCard title="Pacchetti attivi" value={String(activeApps.length)} subtitle={`su ${apps.length} disponibili`} icon={<Package className="w-5 h-5" />} variant="green" />
+          </div>
+        );
+      })()}
 
       {/* ── Promemoria ── */}
       {upcomingReminders.length > 0 && (
