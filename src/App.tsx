@@ -23,6 +23,7 @@ import KitPartenzaPage from "@/pages/KitPartenzaPage";
 import ScadenzarioPage from "@/pages/ScadenzarioPage";
 import PrimaNotaPage from "@/pages/PrimaNotaPage";
 import ProfessionistiPage from "@/pages/ProfessionistiPage";
+import LeadClientsPage from "@/pages/LeadClientsPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -62,6 +63,7 @@ function ProtectedRoutes() {
             <Route path="/scadenzario" element={<ScadenzarioPage />} />
             <Route path="/prima-nota" element={<PrimaNotaPage />} />
             <Route path="/professionisti" element={<ProfessionistiPage />} />
+            <Route path="/lead-clients" element={<LeadClientsPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
