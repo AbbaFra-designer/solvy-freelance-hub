@@ -223,7 +223,7 @@ const EmailBozzerPage = () => {
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Email Bozzer</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Notes</h1>
           <p className="text-muted-foreground text-sm mt-1">Le tue bozze email pronte da copiare</p>
         </div>
         <button onClick={openNew}
