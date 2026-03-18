@@ -1,4 +1,4 @@
-import { TrendingUp, Percent, Package, Bell, Mail } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, Mail, StickyNote, CreditCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -54,9 +54,31 @@ const HomePage = () => {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl mx-auto space-y-8">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Ciao, {displayName} 👋</h1>
-        <p className="text-muted-foreground text-sm mt-1 capitalize">{today}</p>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-semibold text-foreground">Ciao, {displayName} 👋</h1>
+          <p className="text-muted-foreground text-sm mt-1 capitalize">{today}</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => navigate("/id-contact")}
+            className="w-10 h-10 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            title="ID Contact"
+            aria-label="Apri ID Contact"
+          >
+            <CreditCard className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate("/email-bozzer")}
+            className="w-10 h-10 rounded-lg bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            title="Notes"
+            aria-label="Apri Notes"
+          >
+            <StickyNote className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       {(() => {

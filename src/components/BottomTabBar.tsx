@@ -6,7 +6,6 @@ import {
   Home,
   Landmark,
   LayoutGrid,
-  Mail,
   MoreHorizontal,
   Receipt,
   Rocket,
@@ -15,7 +14,6 @@ import {
   TrendingUp,
   User,
   UserCheck,
-  Users,
   UsersRound,
   Wallet,
   type LucideIcon,
@@ -53,8 +51,6 @@ export function BottomTabBar() {
       items: [
         { title: "Lead & Clients", url: "/lead-clients", icon: UserCheck },
         { title: "Preventivi", url: "/preventivi", icon: FileText },
-        { title: "Email Bozzer", url: "/email-bozzer", icon: Mail },
-        { title: "ID Contact", url: "/id-contact", icon: Users },
       ],
     },
     {
@@ -165,7 +161,7 @@ export function BottomTabBar() {
                   active || openTab === tab.key ? "text-accent-orange font-medium" : "text-muted-foreground"
                 }`}
               >
-                <tab.icon className={`w-5 h-5 ${(active || openTab === tab.key) ? "text-accent-orange" : ""}`} />
+                <tab.icon className={`w-5 h-5 ${active || openTab === tab.key ? "text-accent-orange" : ""}`} />
                 <span>{tab.title}</span>
               </button>
             );

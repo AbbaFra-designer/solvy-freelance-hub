@@ -6,7 +6,6 @@ import {
   Home,
   Landmark,
   LayoutGrid,
-  Mail,
   Megaphone,
   Receipt,
   Rocket,
@@ -15,7 +14,6 @@ import {
   TrendingUp,
   User,
   UserCheck,
-  Users,
   UsersRound,
   Wallet,
   type LucideIcon,
@@ -45,8 +43,6 @@ const baseSections: NavSection[] = [
     items: [
       { title: "Lead & Clients", url: "/lead-clients", icon: UserCheck },
       { title: "Preventivi", url: "/preventivi", icon: FileText },
-      { title: "Email Bozzer", url: "/email-bozzer", icon: Mail },
-      { title: "ID Contact", url: "/id-contact", icon: Users },
     ],
   },
   {
@@ -139,9 +135,12 @@ export function AppSidebar() {
           {renderItem(homeItem)}
         </div>
 
-        {sections.map((section) => (
-          <div key={section.title} className="space-y-1.5">
-            <div className="flex items-center gap-2 px-3 text-[11px] uppercase tracking-[0.16em] text-muted-foreground/70">
+        {sections.map((section, index) => (
+          <div
+            key={section.title}
+            className={`space-y-1.5 ${index > 0 ? "border-t border-border/40 mt-1 pt-2" : ""}`}
+          >
+            <div className="flex items-center gap-2 px-3 text-sm font-semibold text-foreground">
               <section.icon className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden lg:block">{section.title}</span>
             </div>

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 const freeApps = [
   { name: "ID Contact", desc: "I tuoi dati aziendali sempre a portata di mano" },
-  { name: "Email Bozze", desc: "Template email pronti da personalizzare" },
+  { name: "Notes", desc: "Template email pronti da personalizzare" },
 ];
 
 const premiumApps = [
