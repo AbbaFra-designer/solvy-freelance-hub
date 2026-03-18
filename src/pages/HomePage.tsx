@@ -60,7 +60,7 @@ const HomePage = () => {
       </div>
 
       {(() => {
-        const fatturato = 35000;
+        const fatturato = 40500;
         const coeff = profile?.coefficiente_redditivita ? parseFloat(profile.coefficiente_redditivita) : 0;
         const codiceAteco = profile?.codice_ateco || "—";
         const aliquotaForfettario = 15; // aliquota sostitutiva standard
