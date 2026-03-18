@@ -8,7 +8,6 @@ import { PreventiviProvider } from "@/context/PreventiviContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import AppLayout from "@/components/AppLayout";
 import HomePage from "@/pages/HomePage";
-import AppsPage from "@/pages/AppsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import ProfilePage from "@/pages/ProfilePage";
 import IdContactPage from "@/pages/IdContactPage";
@@ -48,7 +47,7 @@ function ProtectedRoutes() {
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/apps" element={<AppsPage />} />
+            <Route path="/apps" element={<Navigate to="/" replace />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/id-contact" element={<IdContactPage />} />
