@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppsProvider } from "@/context/AppsContext";
 import { PreventiviProvider } from "@/context/PreventiviContext";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 import { AuthProvider, useAuth } from "@/context/AuthContext";
 import AppLayout from "@/components/AppLayout";
 import HomePage from "@/pages/HomePage";
@@ -25,6 +26,7 @@ import ProfessionistiPage from "@/pages/ProfessionistiPage";
 import LeadClientsPage from "@/pages/LeadClientsPage";
 import TimeTrackingPage from "@/pages/TimeTrackingPage";
 import LibreriaContrattualisticaPage from "@/pages/LibreriaContrattualisticaPage";
+import ComingSoonPage from "@/pages/ComingSoonPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -45,6 +47,7 @@ function ProtectedRoutes() {
 
   return (
     <AppsProvider>
+      <FavoritesProvider>
       <PreventiviProvider>
         <Routes>
           <Route element={<AppLayout />}>
@@ -67,11 +70,14 @@ function ProtectedRoutes() {
             <Route path="/lead-clients" element={<LeadClientsPage />} />
             <Route path="/time-tracking" element={<TimeTrackingPage />} />
             <Route path="/libreria-contratti" element={<LibreriaContrattualisticaPage />} />
+            <Route path="/smm-planner" element={<ComingSoonPage />} />
+            <Route path="/eventi-news" element={<ComingSoonPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </PreventiviProvider>
+      </FavoritesProvider>
     </AppsProvider>
   );
 }

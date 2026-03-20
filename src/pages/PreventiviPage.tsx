@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Download, Mail, Pencil, Trash2, Search, ArrowUpDown } from "lucide-react";
+import { Plus, Download, Mail, Pencil, Trash2, Search, ArrowUpDown, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -161,6 +161,9 @@ export default function PreventiviPage() {
                       <div className="flex items-center justify-end gap-2">
                         <Button variant="ghost" size="icon" className="h-9 w-9" title="Scarica PDF" onClick={() => handleDownload(p)}>
                           <Download className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-9 w-9" title="Scarica per review" onClick={() => { generatePDF(p, pdfColors); toast.success("PDF scaricato per la revisione"); }}>
+                          <Eye className="w-4 h-4" />
                         </Button>
                         <Button variant="ghost" size="icon" className="h-9 w-9" title="Invia via Email" onClick={() => setEmailPreventivo(p)}>
                           <Mail className="w-4 h-4" />

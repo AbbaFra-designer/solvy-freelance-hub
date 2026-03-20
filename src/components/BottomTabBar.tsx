@@ -9,8 +9,10 @@ import {
   MoreHorizontal,
   Receipt,
   Rocket,
+  Scale,
   Settings,
   Shield,
+  Timer,
   TrendingUp,
   User,
   UserCheck,
@@ -67,10 +69,12 @@ export function BottomTabBar() {
       title: "Crescita",
       icon: TrendingUp,
       items: [
-        { title: "Advisor", url: "/advisor", icon: Bot },
-        { title: "Bandi", url: "/bandi", icon: Landmark },
-        { title: "Professionisti", url: "/professionisti", icon: UsersRound },
-        { title: "Kit Partenza", url: "/kit-partenza", icon: Rocket },
+        { title: "Advisor",           url: "/advisor",             icon: Bot },
+        { title: "Bandi",             url: "/bandi",               icon: Landmark },
+        { title: "Professionisti",    url: "/professionisti",      icon: UsersRound },
+        { title: "Kit Partenza",      url: "/kit-partenza",        icon: Rocket },
+        { title: "Time Tracking",     url: "/time-tracking",       icon: Timer },
+        { title: "Safe-Freelance",    url: "/libreria-contratti",  icon: Scale },
       ],
     },
     {
@@ -78,10 +82,10 @@ export function BottomTabBar() {
       title: "Altro",
       icon: MoreHorizontal,
       items: [
-        { title: "SMM Planner", url: "", icon: LayoutGrid },
-        { title: "Eventi presto", url: "", icon: Calendar },
-        { title: "Impostazioni", url: "/settings", icon: Settings },
-        { title: "Profilo", url: "/profile", icon: User },
+        { title: "SMM Planner",   url: "/smm-planner",  icon: LayoutGrid },
+        { title: "Eventi & News", url: "/eventi-news",  icon: Calendar },
+        { title: "Impostazioni",  url: "/settings",     icon: Settings },
+        { title: "Profilo",       url: "/profile",      icon: User },
         ...(isAdmin ? [{ title: "Admin", url: "/admin", icon: Shield }] : []),
       ],
     },
@@ -115,7 +119,6 @@ export function BottomTabBar() {
                   <button
                     key={`${currentOverlay.key}-${item.title}`}
                     type="button"
-                    disabled={comingSoon}
                     onClick={() => {
                       if (!item.url) return;
                       navigate(item.url);
@@ -124,15 +127,11 @@ export function BottomTabBar() {
                     className={`flex flex-col items-center gap-1.5 p-3 rounded-xl text-xs transition-colors ${
                       active
                         ? "bg-accent-orange/10 text-accent-orange font-medium"
-                        : comingSoon
-                          ? "text-muted-foreground/40 cursor-not-allowed"
-                          : "text-muted-foreground hover:bg-secondary"
+                        : "text-muted-foreground hover:bg-secondary"
                     }`}
                   >
                     <item.icon className="w-5 h-5" />
-                    <span className="truncate w-full text-center">
-                      {comingSoon ? `${item.title} presto` : item.title}
-                    </span>
+                    <span className="truncate w-full text-center">{item.title}</span>
                   </button>
                 );
               })}

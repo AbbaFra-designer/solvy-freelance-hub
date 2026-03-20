@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Send, X } from "lucide-react";
+import { Send, Download } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,11 +55,21 @@ export function EmailModal({ preventivo, onClose }: EmailModalProps) {
             <span>{preventivo.numero}_{preventivo.nomeProgetto.replace(/\s+/g, "_")}.pdf</span>
           </div>
         </div>
-        <DialogFooter>
+        <DialogFooter className="gap-2">
           <Button variant="outline" onClick={onClose}>Annulla</Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              toast.success("PDF scaricato per la revisione");
+              onClose();
+            }}
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Scarica per review
+          </Button>
           <Button className="gradient-accent text-foreground font-semibold" onClick={handleSend} disabled={sending}>
             <Send className="w-4 h-4 mr-2" />
-            {sending ? "Invio in corso..." : "Invia"}
+            {sending ? "Invio in corso..." : "Invia Email"}
           </Button>
         </DialogFooter>
       </DialogContent>

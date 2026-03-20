@@ -60,15 +60,17 @@ const SettingsPage = () => {
         <p className="text-muted-foreground text-sm mt-1">Configura il tuo account e le preferenze</p>
       </div>
       <Tabs defaultValue="personali" className="w-full">
-        <TabsList className="w-full grid grid-cols-4 h-11">
+        <TabsList className="w-full grid grid-cols-5 h-11">
           <TabsTrigger value="personali" className="text-xs sm:text-sm">Personali</TabsTrigger>
           <TabsTrigger value="clienti" className="text-xs sm:text-sm">Clienti</TabsTrigger>
-          <TabsTrigger value="fornitori" className="text-xs sm:text-sm">Collaboratori</TabsTrigger>
+          <TabsTrigger value="consulenti" className="text-xs sm:text-sm">Consulenti</TabsTrigger>
+          <TabsTrigger value="fornitori" className="text-xs sm:text-sm">Fornitori</TabsTrigger>
           <TabsTrigger value="app" className="text-xs sm:text-sm">App</TabsTrigger>
         </TabsList>
         <TabsContent value="personali"><PersonalTab /></TabsContent>
         <TabsContent value="clienti"><ClientsTab /></TabsContent>
-        <TabsContent value="fornitori"><SuppliersTab /></TabsContent>
+        <TabsContent value="consulenti"><SuppliersTab label="Consulente" /></TabsContent>
+        <TabsContent value="fornitori"><SuppliersTab label="Fornitore" /></TabsContent>
         <TabsContent value="app"><AppTagsTab /></TabsContent>
       </Tabs>
     </div>
@@ -371,7 +373,7 @@ function ClientsTab() {
 
 // ── Suppliers Tab ──────────────────────────────────────────────────────────────
 
-function SuppliersTab() {
+function SuppliersTab({ label = "Collaboratore" }: { label?: string }) {
   const { user } = useAuth();
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [editing, setEditing] = useState<Partial<Supplier> | null>(null);
@@ -397,14 +399,14 @@ function SuppliersTab() {
       const { error } = await supabase.from("suppliers").update(editing as any).eq("id", editing.id!);
       if (error) { toast.error("Errore"); setSaving(false); return; }
     }
-    toast.success(isNew ? "Collaboratore aggiunto" : "Collaboratore aggiornato");
+    toast.success(isNew ? `${label} aggiunto` : `${label} aggiornato`);
     setEditing(null); setIsNew(false); setSaving(false);
     load();
   };
 
   const remove = async (id: string) => {
     await supabase.from("suppliers").delete().eq("id", id);
-    toast.success("Collaboratore eliminato");
+    toast.success(`${label} eliminato`);
     load();
   };
 
@@ -430,14 +432,14 @@ function SuppliersTab() {
   return (
     <div className="mt-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-semibold text-foreground">Lista Collaboratori</h2>
+        <h2 className="text-base font-semibold text-foreground">Lista {label}i</h2>
         <button onClick={() => { setEditing({ nome: "", email: "", telefono: "", partita_iva: "", codice_fiscale: "", codice_sdi: "", indirizzo: "", stato: "fase_conoscenza" as SupplierStatus }); setIsNew(true); }}
           className="flex items-center gap-2 px-4 py-2 rounded-lg gradient-accent text-sm font-medium text-foreground hover:opacity-90 transition-opacity">
           <Plus className="w-4 h-4" /> Aggiungi
         </button>
       </div>
       {suppliers.length === 0 ? (
-        <div className="text-center py-12 text-muted-foreground text-sm">Nessun collaboratore ancora. Aggiungi il primo!</div>
+        <div className="text-center py-12 text-muted-foreground text-sm">Nessun {label.toLowerCase()} ancora. Aggiungi il primo!</div>
       ) : (
         <div className="space-y-3">
           {suppliers.map(item => (
@@ -748,7 +750,7 @@ function ContactForm({ item, type, saving, onUpdate, onSave, onCancel, isNew }: 
     <div className="mt-6 space-y-5">
       <div className="flex items-center justify-between">
         <h2 className="text-base font-semibold text-foreground">
-          {isNew ? "Nuovo" : "Modifica"} {type === "client" ? "Cliente" : "Collaboratore"}
+          {isNew ? "Nuovo" : "Modifica"} {type === "client" ? "Cliente" : "Contatto"}
         </h2>
         <button onClick={onCancel} className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors">
           <X className="w-4 h-4" />
