@@ -23,6 +23,8 @@ import ScadenzarioPage from "@/pages/ScadenzarioPage";
 import PrimaNotaPage from "@/pages/PrimaNotaPage";
 import ProfessionistiPage from "@/pages/ProfessionistiPage";
 import LeadClientsPage from "@/pages/LeadClientsPage";
+import TimeTrackingPage from "@/pages/TimeTrackingPage";
+import LibreriaContrattualisticaPage from "@/pages/LibreriaContrattualisticaPage";
 import AuthPage from "@/pages/AuthPage";
 import NotFound from "./pages/NotFound";
 
@@ -63,6 +65,8 @@ function ProtectedRoutes() {
             <Route path="/prima-nota" element={<PrimaNotaPage />} />
             <Route path="/professionisti" element={<ProfessionistiPage />} />
             <Route path="/lead-clients" element={<LeadClientsPage />} />
+            <Route path="/time-tracking" element={<TimeTrackingPage />} />
+            <Route path="/libreria-contratti" element={<LibreriaContrattualisticaPage />} />
             <Route path="/admin" element={<AdminPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />

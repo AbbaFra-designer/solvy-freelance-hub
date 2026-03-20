@@ -9,8 +9,10 @@ import {
   Megaphone,
   Receipt,
   Rocket,
+  Scale,
   Settings,
   Shield,
+  Timer,
   TrendingUp,
   User,
   UserCheck,
@@ -61,6 +63,8 @@ const baseSections: NavSection[] = [
       { title: "Bandi", url: "/bandi", icon: Landmark },
       { title: "Professionisti", url: "/professionisti", icon: UsersRound },
       { title: "Kit Partenza", url: "/kit-partenza", icon: Rocket },
+      { title: "Time Tracking & ROI", url: "/time-tracking", icon: Timer },
+      { title: "Libreria Safe-Freelance", url: "/libreria-contratti", icon: Scale },
     ],
   },
   {
@@ -141,8 +145,8 @@ export function AppSidebar() {
             className={`space-y-1.5 ${index > 0 ? "border-t border-border/40 mt-1 pt-2" : ""}`}
           >
             <div className="flex items-center gap-2 px-3 text-sm font-semibold text-foreground">
-              <section.icon className="w-3.5 h-3.5 shrink-0" />
               <span className="hidden lg:block">{section.title}</span>
+              <span className="lg:hidden text-[10px] font-bold uppercase text-muted-foreground tracking-widest">·</span>
             </div>
             <div className="space-y-1">{section.items.map(renderItem)}</div>
           </div>

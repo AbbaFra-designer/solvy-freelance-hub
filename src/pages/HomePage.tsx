@@ -1,4 +1,4 @@
-import { TrendingUp, Percent, Package, Bell, Mail, StickyNote, CreditCard } from "lucide-react";
+import { TrendingUp, Percent, Package, Bell, Mail, StickyNote, Contact } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useApps } from "@/context/AppsContext";
 import { useAuth } from "@/context/AuthContext";
@@ -67,7 +67,7 @@ const HomePage = () => {
             title="ID Contact"
             aria-label="Apri ID Contact"
           >
-            <CreditCard className="w-4 h-4" />
+            <Contact className="w-4 h-4" />
           </button>
           <button
             type="button"
